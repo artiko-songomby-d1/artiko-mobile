@@ -28,6 +28,7 @@ import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.GeneratedCover
 import com.onlydevs.artiko.ui.KindChip
+import com.onlydevs.artiko.ui.rememberHapticClick
 import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 import com.onlydevs.artiko.ui.tiltOnDrag
@@ -50,7 +51,7 @@ fun ArtViewPage(work: Work, onExit: () -> Unit, onOpenArtist: (String) -> Unit) 
         Text(
             text = work.artistName,
             style = ArtikoText.meta,
-            modifier = Modifier.clickable { onOpenArtist(work.artistId) },
+            modifier = Modifier.clickable(onClick = rememberHapticClick { onOpenArtist(work.artistId) }),
         )
         if (work.humanProven) {
             KindChip("Human-made", color = MaterialTheme.colorScheme.primary)
