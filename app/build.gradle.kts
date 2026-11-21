@@ -11,8 +11,8 @@ val commitCount = runCatching {
         .standardOutput.asText.get().trim().toInt()
 }.getOrDefault(1)
 
-// The emulator reaches the host machine at 10.0.2.2.
-val apiBaseUrl = providers.gradleProperty("apiBaseUrl").getOrElse("http://10.0.2.2:8000/")
+// The hosted API; pass -PapiBaseUrl=http://10.0.2.2:8000/ to reach an API running on this machine from the emulator.
+val apiBaseUrl = providers.gradleProperty("apiBaseUrl").getOrElse("https://artiko-api.onrender.com/")
 
 val releaseKeystorePath: String? = System.getenv("KEYSTORE_PATH")
 
