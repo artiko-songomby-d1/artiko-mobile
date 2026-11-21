@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onRoot
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.onlydevs.artiko.ui.GalleryWall
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -21,7 +22,7 @@ abstract class ScreenPreviewTest {
     val composeRule = createComposeRule()
 
     protected fun capture(screenName: String, content: @Composable () -> Unit) {
-        composeRule.setContent { ArtikoTheme(content = content) }
+        composeRule.setContent { ArtikoTheme { GalleryWall(content = content) } }
         composeRule.onRoot().captureRoboImage("build/outputs/roborazzi/$screenName.png")
     }
 }

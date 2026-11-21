@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import com.onlydevs.artiko.ui.theme.ArtikoTheme
 private val SCREEN_PADDING = 16.dp
 private val SECTION_SPACING = 12.dp
 private val CARD_PADDING = 16.dp
+private val CARD_ELEVATION = 6.dp
 
 @Composable
 fun PlaceholderScreen(title: String, sections: List<PlaceholderSection>, modifier: Modifier = Modifier) {
@@ -37,7 +39,10 @@ fun PlaceholderScreen(title: String, sections: List<PlaceholderSection>, modifie
 @Composable
 private fun SectionCard(section: PlaceholderSection) {
     val clickModifier = section.onClick?.let { Modifier.clickable(onClick = it) } ?: Modifier
-    Card(modifier = Modifier.fillMaxWidth().then(clickModifier)) {
+    Card(
+        modifier = Modifier.fillMaxWidth().then(clickModifier),
+        elevation = CardDefaults.cardElevation(defaultElevation = CARD_ELEVATION),
+    ) {
         Text(text = section.label, modifier = Modifier.padding(CARD_PADDING))
     }
 }
