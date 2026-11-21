@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -8 600 156" role="img" aria-label="Artiko">
+  <g fill="none" stroke="#1E2B4A" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="60" cy="80" r="36"/><path d="M96 44 V116"/>
+    <path d="M150 44 V116 M150 84 C150 58 170 48 196 52"/>
+    <path d="M248 20 V96 C248 112 258 118 276 116 M226 52 H278"/>
+    <path d="M316 44 V116"/>
+    <path d="M368 12 V116 M426 46 L368 88 M394 72 L430 116"/>
+  </g>
+  <circle cx="316" cy="18" r="12" fill="#E76F51"/>
+  <g fill="#E76F51"><ellipse cx="508" cy="54.0" rx="13.52" ry="26.0" transform="rotate(0 508 80)"/><ellipse cx="508" cy="54.0" rx="13.52" ry="26.0" transform="rotate(60 508 80)"/><ellipse cx="508" cy="54.0" rx="13.52" ry="26.0" transform="rotate(120 508 80)"/><ellipse cx="508" cy="54.0" rx="13.52" ry="26.0" transform="rotate(180 508 80)"/><ellipse cx="508" cy="54.0" rx="13.52" ry="26.0" transform="rotate(240 508 80)"/><ellipse cx="508" cy="54.0" rx="13.52" ry="26.0" transform="rotate(300 508 80)"/></g><circle cx="508" cy="80" r="10.4" fill="#F5EBDD"/>
+</svg>
