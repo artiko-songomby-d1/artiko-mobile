@@ -3,12 +3,12 @@ package com.onlydevs.artiko.feature.record
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.camera.video.AudioConfig
 import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
+import androidx.camera.view.video.AudioConfig
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue

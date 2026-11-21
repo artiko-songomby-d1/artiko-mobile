@@ -29,8 +29,7 @@ import com.onlydevs.artiko.ui.theme.ArtikoTheme
 private val TIMER_MARGIN = 16.dp
 private const val SECONDS_PER_MINUTE = 60
 
-fun formatElapsed(seconds: Int): String =
-    "%02d:%02d".format(seconds / SECONDS_PER_MINUTE, seconds % SECONDS_PER_MINUTE)
+fun formatElapsed(seconds: Int): String = "%02d:%02d".format(seconds / SECONDS_PER_MINUTE, seconds % SECONDS_PER_MINUTE)
 
 /** The record screen: a framed viewfinder with a timer, the record button and what to do with the take. */
 @Composable
