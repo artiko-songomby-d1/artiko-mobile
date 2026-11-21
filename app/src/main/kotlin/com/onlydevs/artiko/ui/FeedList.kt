@@ -20,6 +20,7 @@ fun FeedList(
     works: List<Work>,
     onOpenArtView: (String) -> Unit,
     modifier: Modifier = Modifier,
+    emptyMessage: String = "Nothing to show yet",
     header: @Composable () -> Unit = {},
 ) {
     LazyColumn(
@@ -29,6 +30,9 @@ fun FeedList(
     ) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(FEED_SPACING)) { header() }
+        }
+        if (works.isEmpty()) {
+            item { EmptyPlaceholder(emptyMessage) }
         }
         items(works, key = { it.id }) { work ->
             ArtCard(work = work, onClick = { onOpenArtView(work.id) })
