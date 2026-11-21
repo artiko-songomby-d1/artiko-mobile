@@ -37,7 +37,7 @@ fun SearchField(
         leadingIcon = { Icon(imageVector = Icons.Filled.Search, contentDescription = null) },
         trailingIcon = {
             if (value.isNotEmpty()) {
-                IconButton(onClick = { onValueChange("") }) {
+                IconButton(onClick = rememberHapticClick { onValueChange("") }) {
                     Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear the search")
                 }
             }

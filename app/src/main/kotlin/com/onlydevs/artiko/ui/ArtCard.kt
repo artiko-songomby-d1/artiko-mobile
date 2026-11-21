@@ -49,7 +49,7 @@ fun ArtCard(work: Work, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val pressed by interactionSource.collectIsPressedAsState()
     val press by animateFloatAsState(targetValue = if (pressed) 1f else 0f, label = "press")
     Card(
-        onClick = onClick,
+        onClick = rememberHapticClick(onClick),
         modifier = modifier
             .fillMaxWidth()
             .height(CARD_HEIGHT)

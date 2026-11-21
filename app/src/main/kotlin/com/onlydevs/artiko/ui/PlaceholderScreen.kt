@@ -1,8 +1,8 @@
 package com.onlydevs.artiko.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,12 +38,19 @@ fun PlaceholderScreen(title: String, sections: List<PlaceholderSection>, modifie
 
 @Composable
 private fun SectionCard(section: PlaceholderSection) {
-    val clickModifier = section.onClick?.let { Modifier.clickable(onClick = it) } ?: Modifier
-    Card(
-        modifier = Modifier.fillMaxWidth().then(clickModifier),
-        elevation = CardDefaults.cardElevation(defaultElevation = CARD_ELEVATION),
-    ) {
+    val elevation = CardDefaults.cardElevation(defaultElevation = CARD_ELEVATION)
+    val label: @Composable ColumnScope.() -> Unit = {
         Text(text = section.label, modifier = Modifier.padding(CARD_PADDING))
+    }
+    if (section.onClick == null) {
+        Card(modifier = Modifier.fillMaxWidth(), elevation = elevation, content = label)
+    } else {
+        Card(
+            onClick = rememberHapticClick(section.onClick),
+            modifier = Modifier.fillMaxWidth(),
+            elevation = elevation,
+            content = label,
+        )
     }
 }
 

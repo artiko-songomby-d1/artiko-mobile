@@ -1,6 +1,7 @@
 package com.onlydevs.artiko.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -33,10 +35,15 @@ private const val DISABLED_ALPHA = 0.4f
 /** The call to action of artiko-web: an ink pill with a red dot that holds an arrow. */
 @Composable
 fun ArtikoButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
+    val interactionSource = remember { MutableInteractionSource() }
     Surface(
-        onClick = onClick,
+        onClick = rememberHapticClick(onClick),
         enabled = enabled,
-        modifier = modifier.height(HEIGHT).alpha(if (enabled) 1f else DISABLED_ALPHA),
+        modifier = modifier
+            .height(HEIGHT)
+            .alpha(if (enabled) 1f else DISABLED_ALPHA)
+            .pressScale(interactionSource),
+        interactionSource = interactionSource,
         shape = CircleShape,
         color = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
