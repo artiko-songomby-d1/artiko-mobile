@@ -4,7 +4,11 @@ import com.onlydevs.artiko.data.Artist
 import com.onlydevs.artiko.data.Category
 import com.onlydevs.artiko.data.Exposition
 import com.onlydevs.artiko.data.HallOfFameEntry
+import com.onlydevs.artiko.data.KnownWork
 import com.onlydevs.artiko.data.MediaKind
+import com.onlydevs.artiko.data.ScanResult
+import com.onlydevs.artiko.data.ScanSource
+import com.onlydevs.artiko.data.ScanStatus
 import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.feature.halloffame.CategoryHall
 
@@ -69,6 +73,14 @@ object MockGallery {
         CategoryHall(Category("oral_arts", "Oral arts"), ranked(hasina, harvest)),
         CategoryHall(Category("music", "Music"), ranked(bambooBreathes, tuning)),
     )
+
+    val scanOfKnownWork = ScanResult(
+        status = ScanStatus.Known,
+        confidence = 0.93,
+        known = KnownWork("Water Lilies", "Claude Monet", "1906", "Art Institute of Chicago"),
+        sources = listOf(ScanSource("Art Institute of Chicago", "https://www.artic.edu")),
+    )
+    val scanOfHumanWork = ScanResult(status = ScanStatus.HumanProven, confidence = 0.97, work = terraces)
 
     private fun exposition(id: String, artist: Artist, title: String, description: String, worksCount: Int) =
         Exposition(id, artist.id, artist.displayName, title, description, coverUrl = null, worksCount = worksCount)

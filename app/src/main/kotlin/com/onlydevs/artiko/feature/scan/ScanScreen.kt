@@ -1,28 +1,49 @@
 package com.onlydevs.artiko.feature.scan
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.camera.view.CameraController
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.onlydevs.artiko.ui.PlaceholderScreen
-import com.onlydevs.artiko.ui.PlaceholderSection
-import com.onlydevs.artiko.ui.theme.ArtikoTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.onlydevs.artiko.data.readMedia
+import com.onlydevs.artiko.ui.artikoViewModel
+import com.onlydevs.artiko.ui.camera.CameraPreview
+import com.onlydevs.artiko.ui.camera.RequirePermissions
+import com.onlydevs.artiko.ui.camera.rememberCameraController
+import com.onlydevs.artiko.ui.camera.takePhoto
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScanScreen() {
-    PlaceholderScreen(
-        title = "Scan",
-        sections = listOf(
-            PlaceholderSection("Viewfinder: point the camera at an artwork or let it listen to a song"),
-            PlaceholderSection("Take a photo"),
-            PlaceholderSection("Pick one from the gallery"),
-            PlaceholderSection("Result: who made it and whether it is proven human-made"),
-        ),
-    )
-}
+    val viewModel = artikoViewModel { api -> ScanViewModel(api) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val controller = rememberCameraController(CameraController.IMAGE_CAPTURE)
+    val gallery = rememberLauncherForActivityResult(PickVisualMedia()) { uri ->
+        uri?.let { scope.launch { viewModel.scan(context.readMedia(it)) } }
+    }
 
-@Preview(showBackground = true)
-@Composable
-private fun ScanScreenPreview() {
-    ArtikoTheme {
-        ScanScreen()
+    RequirePermissions(
+        permissions = listOf(Manifest.permission.CAMERA),
+        rationale = "Artiko needs the camera to scan an artwork",
+    ) {
+        ScanPage(
+            state = state,
+            viewfinder = { CameraPreview(controller) },
+            onScan = {
+                scope.launch {
+                    runCatching { controller.takePhoto(context).readMedia("image/jpeg") }
+                        .onSuccess(viewModel::scan)
+                }
+            },
+            onPick = { gallery.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly)) },
+            onReset = viewModel::reset,
+        )
     }
 }
