@@ -1,7 +1,7 @@
 package com.onlydevs.artiko.support
 
-import com.onlydevs.artiko.data.Artist
 import com.onlydevs.artiko.data.ArtikoApi
+import com.onlydevs.artiko.data.Artist
 import com.onlydevs.artiko.data.Category
 import com.onlydevs.artiko.data.Exposition
 import com.onlydevs.artiko.data.HallOfFameEntry
