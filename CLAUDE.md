@@ -7,7 +7,7 @@
 ## Commits
 - Format: `type(scope): subject`, Conventional Commits.
 - Types: `feat` `fix` `refactor` `docs` `test` `chore` `build` `ci` `style` `perf`.
-- Scope: the single screen or module touched (`discovery`, `artist`, `exposition`, `art-view`, `create`, `learn`, `profile`, `settings`, `nav`, `core`) or `build`, `ci`, `maquette`, `guidelines`.
+- Scope: the single screen or module touched (`discovery`, `artist`, `exposition`, `art-view`, `create`, `learn`, `profile`, `settings`, `nav`, `core`) or `build`, `ci`, `maquette`, `guidelines`, `logo`, `auth`, `device`.
 - One scope per commit. If the diff spans two scopes, split it (`git add -p`) into one commit per scope.
 - Subject: imperative, lowercase, no trailing period, 72 characters max.
 - Subject must not contain "and", "&", "+" or ",". If you need one, the commit is too big: split it.
