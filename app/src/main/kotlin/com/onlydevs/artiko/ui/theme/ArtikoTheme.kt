@@ -5,5 +5,10 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ArtikoTheme(content: @Composable () -> Unit) {
-    MaterialTheme(content = content)
+    MaterialTheme(
+        colorScheme = artikoColorScheme,
+        typography = artikoTypography,
+        shapes = artikoShapes,
+        content = content,
+    )
 }
