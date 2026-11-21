@@ -74,6 +74,14 @@ object MockGallery {
         CategoryHall(Category("music", "Music"), ranked(bambooBreathes, tuning)),
     )
 
+    val categories = listOf(
+        Category("painting", "Painting"),
+        Category("sculpture", "Sculpture"),
+        Category("music", "Music"),
+        Category("oral_arts", "Oral arts"),
+        Category("crafts", "Crafts"),
+    )
+
     val scanOfKnownWork = ScanResult(
         status = ScanStatus.Known,
         confidence = 0.93,
