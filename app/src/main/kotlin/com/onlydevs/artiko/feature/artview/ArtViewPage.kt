@@ -26,8 +26,8 @@ import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.GeneratedCover
-import com.onlydevs.artiko.ui.tiltOnDrag
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
+import com.onlydevs.artiko.ui.tiltOnDrag
 
 private val UNSUPPORTED_VIEWER_HEIGHT = 240.dp
 
