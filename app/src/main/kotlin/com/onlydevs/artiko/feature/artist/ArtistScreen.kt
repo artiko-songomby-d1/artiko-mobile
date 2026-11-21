@@ -1,6 +1,7 @@
 package com.onlydevs.artiko.feature.artist
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.onlydevs.artiko.ui.LoadStateContent
 import com.onlydevs.artiko.ui.artikoViewModel
