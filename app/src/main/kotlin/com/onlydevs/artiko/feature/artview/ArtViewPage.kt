@@ -1,5 +1,6 @@
 package com.onlydevs.artiko.feature.artview
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,9 +23,12 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.onlydevs.artiko.data.MediaKind
 import com.onlydevs.artiko.data.Work
+import com.onlydevs.artiko.ui.ExpositionChip
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.GeneratedCover
+import com.onlydevs.artiko.ui.KindChip
+import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 import com.onlydevs.artiko.ui.tiltOnDrag
 
@@ -41,12 +44,16 @@ fun ArtViewPage(work: Work, onExit: () -> Unit, onOpenArtist: (String) -> Unit) 
             .padding(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
     ) {
-        TextButton(onClick = onExit) { Text("Exit") }
+        ExpositionChip(title = "Exit", onClick = onExit)
         ArtMedia(work, Modifier.tiltOnDrag())
         Text(work.title, style = MaterialTheme.typography.headlineMedium)
-        TextButton(onClick = { onOpenArtist(work.artistId) }) { Text(work.artistName) }
+        Text(
+            text = work.artistName,
+            style = ArtikoText.meta,
+            modifier = Modifier.clickable { onOpenArtist(work.artistId) },
+        )
         if (work.humanProven) {
-            Text("Human-made", style = MaterialTheme.typography.labelLarge)
+            KindChip("Human-made", color = MaterialTheme.colorScheme.primary)
         }
         Text(work.story)
     }
