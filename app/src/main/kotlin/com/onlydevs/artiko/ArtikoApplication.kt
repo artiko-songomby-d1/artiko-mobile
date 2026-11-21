@@ -10,6 +10,8 @@ import com.onlydevs.artiko.data.auth.createAuthApi
 import com.onlydevs.artiko.data.auth.createSessionAead
 import com.onlydevs.artiko.data.auth.sessionDataStore
 import com.onlydevs.artiko.data.createArtikoApi
+import com.onlydevs.artiko.data.settings.SettingsRepository
+import com.onlydevs.artiko.data.settings.settingsDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -23,6 +25,8 @@ class ArtikoApplication : Application() {
         val store = TinkSessionStore(sessionDataStore, createSessionAead(this))
         AuthRepository(createAuthApi(BuildConfig.AUTH_BASE_URL), store)
     }
+
+    val settingsRepository: SettingsRepository by lazy { SettingsRepository(settingsDataStore) }
 
     val api: ArtikoApi by lazy {
         val client = OkHttpClient.Builder()
