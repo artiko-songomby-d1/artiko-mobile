@@ -25,5 +25,10 @@ fun ArtImage(
         .data(url)
         .apply { if (saver) size(Size(SAVER_SIDE, SAVER_SIDE)) }
         .build()
-    AsyncImage(model = request, contentDescription = contentDescription, modifier = modifier, contentScale = contentScale)
+    AsyncImage(
+        model = request,
+        contentDescription = contentDescription,
+        modifier = modifier,
+        contentScale = contentScale,
+    )
 }

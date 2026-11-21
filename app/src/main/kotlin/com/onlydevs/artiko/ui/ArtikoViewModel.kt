@@ -14,3 +14,10 @@ inline fun <reified VM : ViewModel> artikoViewModel(noinline create: (ArtikoApi)
     val application = LocalContext.current.applicationContext as ArtikoApplication
     return viewModel(factory = viewModelFactory { initializer { create(application.api) } })
 }
+
+/** Like [artikoViewModel], for screens that need more than the API, such as the settings or the account. */
+@Composable
+inline fun <reified VM : ViewModel> appViewModel(noinline create: (ArtikoApplication) -> VM): VM {
+    val application = LocalContext.current.applicationContext as ArtikoApplication
+    return viewModel(factory = viewModelFactory { initializer { create(application) } })
+}

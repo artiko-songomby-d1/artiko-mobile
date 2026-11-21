@@ -24,6 +24,7 @@ import com.onlydevs.artiko.feature.profile.ProfileScreen
 import com.onlydevs.artiko.feature.record.RecordScreen
 import com.onlydevs.artiko.feature.scan.ScanScreen
 import com.onlydevs.artiko.feature.settings.SettingsScreen
+import com.onlydevs.artiko.feature.settings.SettingsSectionScreen
 import com.onlydevs.artiko.feature.upload.UploadScreen
 import com.onlydevs.artiko.ui.theme.LocalAppSettings
 
@@ -89,6 +90,17 @@ fun ArtikoNavHost(navController: NavHostController, modifier: Modifier = Modifie
                 onOpenArtist = { artistId -> navController.navigate(ArtistRoute(artistId)) },
             )
         }
-        composable<SettingsRoute> { SettingsScreen() }
+        composable<SettingsRoute> {
+            SettingsScreen(
+                onOpen = { section -> navController.navigate(SettingsSectionRoute(section)) },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable<SettingsSectionRoute> { entry ->
+            SettingsSectionScreen(
+                section = entry.toRoute<SettingsSectionRoute>().section,
+                onBack = { navController.popBackStack() },
+            )
+        }
     }
 }

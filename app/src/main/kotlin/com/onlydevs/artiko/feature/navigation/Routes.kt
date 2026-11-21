@@ -1,5 +1,6 @@
 package com.onlydevs.artiko.feature.navigation
 
+import com.onlydevs.artiko.feature.settings.SettingsSection
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -28,6 +29,9 @@ data object HallOfFameRoute
 
 @Serializable
 data object SettingsRoute
+
+@Serializable
+data class SettingsSectionRoute(val section: SettingsSection)
 
 @Serializable
 data class ArtistRoute(val artistId: String)
