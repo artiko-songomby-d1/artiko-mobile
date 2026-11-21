@@ -31,6 +31,11 @@ fun DiscoveryPage(
 @Composable
 private fun DiscoveryPagePreview() {
     ArtikoTheme {
-        DiscoveryPage(DiscoveryContent(emptyList(), emptyList()), onOpenHallOfFame = {}, onOpenExposition = {}, onOpenArtView = {})
+        DiscoveryPage(
+            content = DiscoveryContent(emptyList(), emptyList()),
+            onOpenHallOfFame = {},
+            onOpenExposition = {},
+            onOpenArtView = {},
+        )
     }
 }
