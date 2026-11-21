@@ -25,7 +25,11 @@ class ArtistPageShowsProfileExpositionsAndWorksTest {
 
         val viewModel = ArtistViewModel(api, "artist-1")
 
-        val expected = ArtistContent(sampleArtist("artist-1"), listOf(sampleExposition("expo-1", "artist-1")), listOf(own))
+        val expected = ArtistContent(
+            artist = sampleArtist("artist-1"),
+            expositions = listOf(sampleExposition("expo-1", "artist-1")),
+            works = listOf(own),
+        )
         assertEquals(LoadState.Loaded(expected), viewModel.state.value)
     }
 }

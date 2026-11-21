@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.onlydevs.artiko.data.Artist
-import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.ExpositionChip
+import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.FeedList
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
