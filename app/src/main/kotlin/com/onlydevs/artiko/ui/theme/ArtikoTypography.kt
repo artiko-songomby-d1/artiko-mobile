@@ -1,49 +1,94 @@
 package com.onlydevs.artiko.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.onlydevs.artiko.R
 
-private const val REGULAR_WEIGHT = 400
-private const val MEDIUM_WEIGHT = 500
+private val SANS_WEIGHTS = listOf(FontWeight.Normal, FontWeight.Medium, FontWeight.SemiBold, FontWeight.Bold)
+private val SERIF_WEIGHTS = listOf(FontWeight.Medium, FontWeight.SemiBold)
 
-// Fonts of artiko-web: Inter for text, League Gothic for titles.
-private val Inter = FontFamily(
-    Font(
-        resId = R.font.inter,
-        weight = FontWeight.Normal,
-        variationSettings = FontVariation.Settings(FontVariation.weight(REGULAR_WEIGHT)),
-    ),
-    Font(
-        resId = R.font.inter,
-        weight = FontWeight.Medium,
-        variationSettings = FontVariation.Settings(FontVariation.weight(MEDIUM_WEIGHT)),
-    ),
+// Fonts of artiko-web: Bricolage Grotesque for text, Cormorant italic for accents, League Gothic for titles.
+private val Sans = FontFamily(
+    SANS_WEIGHTS.map { weight ->
+        Font(
+            resId = R.font.bricolage_grotesque,
+            weight = weight,
+            variationSettings = FontVariation.Settings(FontVariation.weight(weight.weight)),
+        )
+    },
 )
-private val LeagueGothic = FontFamily(Font(R.font.league_gothic))
+private val Serif = FontFamily(
+    SERIF_WEIGHTS.map { weight ->
+        Font(
+            resId = R.font.cormorant_italic,
+            weight = weight,
+            style = FontStyle.Italic,
+            variationSettings = FontVariation.Settings(FontVariation.weight(weight.weight)),
+        )
+    },
+)
+private val Display = FontFamily(Font(R.font.league_gothic))
 
 private val base = Typography()
-private val META_SPACING = 0.04.em
+private val CHIP_SPACING = 0.08.em
 
 val artikoTypography = Typography(
-    displayLarge = base.displayLarge.copy(fontFamily = LeagueGothic, fontSize = 64.sp, lineHeight = 64.sp),
-    displayMedium = base.displayMedium.copy(fontFamily = LeagueGothic, fontSize = 52.sp, lineHeight = 52.sp),
-    displaySmall = base.displaySmall.copy(fontFamily = LeagueGothic, fontSize = 44.sp, lineHeight = 44.sp),
-    headlineLarge = base.headlineLarge.copy(fontFamily = LeagueGothic, fontSize = 48.sp, lineHeight = 48.sp),
-    headlineMedium = base.headlineMedium.copy(fontFamily = LeagueGothic, fontSize = 40.sp, lineHeight = 40.sp),
-    headlineSmall = base.headlineSmall.copy(fontFamily = LeagueGothic, fontSize = 32.sp, lineHeight = 32.sp),
-    titleLarge = base.titleLarge.copy(fontFamily = LeagueGothic, fontSize = 28.sp, lineHeight = 30.sp),
-    titleMedium = base.titleMedium.copy(fontFamily = LeagueGothic, fontSize = 24.sp, lineHeight = 26.sp),
-    titleSmall = base.titleSmall.copy(fontFamily = Inter, fontWeight = FontWeight.Medium),
-    bodyLarge = base.bodyLarge.copy(fontFamily = Inter, fontSize = 16.sp, lineHeight = 26.sp),
-    bodyMedium = base.bodyMedium.copy(fontFamily = Inter, fontSize = 15.sp, lineHeight = 24.sp),
-    bodySmall = base.bodySmall.copy(fontFamily = Inter, fontSize = 13.sp, lineHeight = 20.sp),
-    labelLarge = base.labelLarge.copy(fontFamily = Inter, fontWeight = FontWeight.Medium),
-    labelMedium = base.labelMedium.copy(fontFamily = Inter, letterSpacing = META_SPACING),
-    labelSmall = base.labelSmall.copy(fontFamily = Inter, letterSpacing = META_SPACING),
+    displayLarge = base.displayLarge.copy(fontFamily = Display, fontSize = 64.sp, lineHeight = 64.sp),
+    displayMedium = base.displayMedium.copy(fontFamily = Display, fontSize = 56.sp, lineHeight = 56.sp),
+    displaySmall = base.displaySmall.copy(fontFamily = Display, fontSize = 48.sp, lineHeight = 48.sp),
+    headlineLarge = base.headlineLarge.copy(fontFamily = Display, fontSize = 56.sp, lineHeight = 56.sp),
+    headlineMedium = base.headlineMedium.copy(fontFamily = Display, fontSize = 48.sp, lineHeight = 48.sp),
+    headlineSmall = base.headlineSmall.copy(fontFamily = Display, fontSize = 36.sp, lineHeight = 36.sp),
+    titleLarge = base.titleLarge.copy(fontFamily = Display, fontSize = 32.sp, lineHeight = 32.sp),
+    titleMedium = base.titleMedium.copy(
+        fontFamily = Serif,
+        fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 24.sp,
+        lineHeight = 26.sp,
+    ),
+    titleSmall = base.titleSmall.copy(fontFamily = Sans, fontWeight = FontWeight.Medium),
+    bodyLarge = base.bodyLarge.copy(fontFamily = Sans, fontSize = 17.sp, lineHeight = 27.sp, color = BodyText),
+    bodyMedium = base.bodyMedium.copy(fontFamily = Sans, fontSize = 15.5.sp, lineHeight = 24.5.sp, color = BodyText),
+    bodySmall = base.bodySmall.copy(fontFamily = Sans, fontSize = 13.sp, lineHeight = 20.sp, color = Muted),
+    labelLarge = base.labelLarge.copy(fontFamily = Sans, fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
+    labelMedium = base.labelMedium.copy(fontFamily = Sans, fontSize = 14.sp, fontWeight = FontWeight.Medium),
+    labelSmall = base.labelSmall.copy(
+        fontFamily = Sans,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = CHIP_SPACING,
+    ),
 )
+
+/** Text styles of artiko-web that Material has no slot for. */
+object ArtikoText {
+    val meta = TextStyle(
+        fontFamily = Serif,
+        fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.Medium,
+        fontSize = 19.sp,
+        color = Muted,
+    )
+    val number = TextStyle(
+        fontFamily = Serif,
+        fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 26.sp,
+        color = RedDeep,
+    )
+    val activeTab = TextStyle(
+        fontFamily = Serif,
+        fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 17.sp,
+        color = RedDeep,
+    )
+}
