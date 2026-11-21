@@ -17,7 +17,8 @@ class DiscoverySearchNarrowsTheFeedTest {
 
     private val terraces = sampleWork(id = "terraces", title = "Terraces at Noon")
     private val sunrise = sampleWork(id = "sunrise", title = "Sunrise")
-    private val viewModel = DiscoveryViewModel(FakeArtikoApi(works = listOf(terraces, sunrise)))
+    // Built on first use: the main dispatcher rule has to be active before a ViewModel starts.
+    private val viewModel by lazy { DiscoveryViewModel(FakeArtikoApi(works = listOf(terraces, sunrise))) }
 
     private fun shownWorks() = (viewModel.state.value as LoadState.Loaded).data.works
 
