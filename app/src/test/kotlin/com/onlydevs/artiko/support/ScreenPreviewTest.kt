@@ -22,6 +22,6 @@ abstract class ScreenPreviewTest {
 
     protected fun capture(screenName: String, content: @Composable () -> Unit) {
         composeRule.setContent { ArtikoTheme(content = content) }
-        composeRule.onRoot().captureRoboImage("build/screenshots/$screenName.png")
+        composeRule.onRoot().captureRoboImage("build/outputs/roborazzi/$screenName.png")
     }
 }
