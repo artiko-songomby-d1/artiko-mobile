@@ -1,6 +1,5 @@
 package com.onlydevs.artiko.feature.artview
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,6 +25,7 @@ import com.onlydevs.artiko.data.MediaKind
 import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
+import com.onlydevs.artiko.ui.GeneratedCover
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 private val UNSUPPORTED_VIEWER_HEIGHT = 240.dp
@@ -52,7 +53,7 @@ fun ArtViewPage(work: Work, onExit: () -> Unit, onOpenArtist: (String) -> Unit) 
 
 @Composable
 private fun ArtMedia(work: Work) {
-    if (work.mediaKind == MediaKind.Image) {
+    if (work.mediaKind == MediaKind.Image && work.mediaUrl.isNotBlank()) {
         AsyncImage(
             model = work.mediaUrl,
             contentDescription = work.title,
@@ -61,13 +62,13 @@ private fun ArtMedia(work: Work) {
         )
     } else {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(UNSUPPORTED_VIEWER_HEIGHT)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+            modifier = Modifier.fillMaxWidth().height(UNSUPPORTED_VIEWER_HEIGHT),
             contentAlignment = Alignment.Center,
         ) {
-            Text("Viewer for ${work.mediaKind.name.lowercase()} is coming soon")
+            GeneratedCover(seed = work.id)
+            if (work.mediaKind != MediaKind.Image) {
+                Text("Viewer for ${work.mediaKind.name.lowercase()} is coming soon", color = Color.White)
+            }
         }
     }
 }
