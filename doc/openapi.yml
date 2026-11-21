@@ -1,0 +1,565 @@
+openapi: 3.1.0
+info:
+  title: Artiko API
+  version: 0.1.0
+  description: |
+    One API for the Artiko Android app and web app (spec: SOLUTION-6).
+
+    **Sign-in.** Accounts live in Better Auth, run by artiko-web. Every call marked with the
+    `bearer` security scheme needs a short-lived JWT (15 min) signed by Better Auth.
+    - Web: `authClient.token()`.
+    - Android: `POST {web}/api/auth/sign-up/email` or `POST {web}/api/auth/sign-in/email`
+      with `{email, password, name?}` → read the `set-auth-token` response header (session
+      token) → `GET {web}/api/auth/token` with `Authorization: Bearer <session token>` →
+      `{token}` is the JWT for this API. Refresh it before `exp`.
+
+    **Errors** always have the shape `Error`.
+    **Months** are `YYYY-MM` (UTC). **Media URLs** are absolute.
+servers:
+  - url: http://localhost:8000
+security: []
+
+paths:
+  /api/v1/health:
+    get:
+      operationId: health
+      tags: [health]
+      responses:
+        "200":
+          description: The API is up
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string, const: ok }
+
+  /api/v1/me:
+    get:
+      operationId: getMe
+      tags: [me]
+      security: [{ bearer: [] }]
+      responses:
+        "200":
+          description: The signed-in user and their artist profile, if any
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/me/artist:
+    put:
+      operationId: upsertMyArtist
+      tags: [me]
+      summary: Become an artist, or update one's artist profile
+      security: [{ bearer: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ArtistIn" }
+      responses:
+        "200":
+          description: The artist profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Artist" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/Invalid" }
+
+  /api/v1/artists:
+    get:
+      operationId: listArtists
+      tags: [artists]
+      responses:
+        "200":
+          description: Every artist, by name
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Artist" }
+
+  /api/v1/artists/{artist_id}:
+    parameters:
+      - $ref: "#/components/parameters/ArtistId"
+    get:
+      operationId: getArtist
+      tags: [artists]
+      responses:
+        "200":
+          description: The artist
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Artist" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/artists/{artist_id}/museum:
+    parameters:
+      - $ref: "#/components/parameters/ArtistId"
+    get:
+      operationId: getMuseum
+      tags: [artists]
+      summary: The artist's 3D museum, laid out by the API so web and Android render the same room
+      responses:
+        "200":
+          description: The room
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Museum" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/works:
+    get:
+      operationId: listWorks
+      tags: [works]
+      parameters:
+        - { name: category, in: query, schema: { $ref: "#/components/schemas/CategoryId" } }
+        - { name: month, in: query, schema: { $ref: "#/components/schemas/Month" } }
+        - { name: artist_id, in: query, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: Works, newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Work" }
+    post:
+      operationId: createWork
+      tags: [works]
+      summary: Publish a work with its proof of process (artists only)
+      description: |
+        The work is `human_proven` when it has at least 2 proof files and is not declared
+        AI-assisted. The same file (SHA-256) cannot be published twice.
+        Files: up to 20 MB each; images (jpeg, png, webp), audio (mpeg, wav, ogg),
+        video (mp4, webm), 3D (glb).
+      security: [{ bearer: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [title, category, file]
+              properties:
+                title: { type: string, minLength: 1, maxLength: 200 }
+                story: { type: string, maxLength: 5000, default: "" }
+                category: { $ref: "#/components/schemas/CategoryId" }
+                ai_declared: { type: boolean, default: false }
+                file: { type: string, format: binary }
+                proof:
+                  type: array
+                  maxItems: 5
+                  items: { type: string, format: binary }
+      responses:
+        "201":
+          description: The published work
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Work" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "413": { $ref: "#/components/responses/TooLarge" }
+
+  /api/v1/works/{work_id}:
+    parameters:
+      - { name: work_id, in: path, required: true, schema: { type: string, format: uuid } }
+    get:
+      operationId: getWork
+      tags: [works]
+      responses:
+        "200":
+          description: The work
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Work" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/votes:
+    post:
+      operationId: castVote
+      tags: [votes]
+      summary: One vote per person, per category, per month
+      description: |
+        Refused when the work is not human-proven (`not_eligible`), was not published this
+        month (`not_in_contest`) or belongs to the voter (`own_work`), all 400; and when the
+        voter already voted in this category this month (`already_voted`, 409).
+      security: [{ bearer: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [work_id]
+              properties:
+                work_id: { type: string, format: uuid }
+      responses:
+        "201":
+          description: The vote
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Vote" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /api/v1/votes/mine:
+    get:
+      operationId: listMyVotes
+      tags: [votes]
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: month, in: query, schema: { $ref: "#/components/schemas/Month" } }
+      responses:
+        "200":
+          description: The user's votes for the month (default the current month)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Vote" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/hall-of-fame/{category}/{month}:
+    parameters:
+      - { name: category, in: path, required: true, schema: { $ref: "#/components/schemas/CategoryId" } }
+      - { name: month, in: path, required: true, schema: { $ref: "#/components/schemas/Month" } }
+    get:
+      operationId: getHallOfFame
+      tags: [hall-of-fame]
+      summary: The top 5 works of a category for a month
+      responses:
+        "200":
+          description: Ranked works with at least one vote, at most 5; ties broken by earliest publication
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 5
+                items: { $ref: "#/components/schemas/HallOfFameEntry" }
+
+  /api/v1/categories:
+    get:
+      operationId: listCategories
+      tags: [works]
+      responses:
+        "200":
+          description: Every category
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Category" }
+
+  /api/v1/practices:
+    get:
+      operationId: listPractices
+      tags: [practices]
+      summary: The Living Heritage Index
+      responses:
+        "200":
+          description: Practices, most endangered first
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Practice" }
+
+  /api/v1/practices/{practice_id}:
+    parameters:
+      - { name: practice_id, in: path, required: true, schema: { type: string, examples: [kabary] } }
+    get:
+      operationId: getPractice
+      tags: [practices]
+      responses:
+        "200":
+          description: The practice
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Practice" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/scan/image:
+    post:
+      operationId: scanImage
+      tags: [scan]
+      summary: Identify a photo of an artwork (camera on Android, upload on the web)
+      description: The photo is not stored. Images only, up to 20 MB.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: { type: string, format: binary }
+      responses:
+        "200":
+          description: The answer
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ScanResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "413": { $ref: "#/components/responses/TooLarge" }
+
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    ArtistId:
+      name: artist_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  responses:
+    BadRequest:
+      description: The request breaks a rule; `error.code` says which
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    Unauthorized:
+      description: Missing or invalid token (`unauthorized`, `invalid_token`)
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    Forbidden:
+      description: Signed in, but not allowed (`not_an_artist`)
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    NotFound:
+      description: No such resource
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    Conflict:
+      description: Already exists (`already_voted`, `duplicate_work`)
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    TooLarge:
+      description: File over the size limit (`file_too_large`)
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    Invalid:
+      description: Body or parameters fail validation (`invalid_request`)
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, examples: [already_voted] }
+            message: { type: string }
+
+    Month:
+      type: string
+      pattern: "^\\d{4}-(0[1-9]|1[0-2])$"
+      examples: ["2026-11"]
+
+    CategoryId:
+      type: string
+      enum: [painting, sculpture, photography, music, dance, oral_arts, crafts, digital]
+
+    Category:
+      type: object
+      required: [id, label]
+      properties:
+        id: { $ref: "#/components/schemas/CategoryId" }
+        label: { type: string, examples: [Oral arts] }
+
+    ArtistIn:
+      type: object
+      required: [display_name]
+      properties:
+        display_name: { type: string, minLength: 1, maxLength: 100 }
+        bio: { type: string, maxLength: 2000, default: "" }
+        region: { type: string, maxLength: 100, default: "" }
+
+    Artist:
+      type: object
+      required: [id, display_name, bio, region]
+      properties:
+        id: { type: string, format: uuid }
+        display_name: { type: string }
+        bio: { type: string }
+        region: { type: string }
+
+    Me:
+      type: object
+      required: [id, email, name, artist]
+      properties:
+        id: { type: string }
+        email: { type: [string, "null"] }
+        name: { type: [string, "null"] }
+        artist:
+          oneOf:
+            - { $ref: "#/components/schemas/Artist" }
+            - { type: "null" }
+
+    MediaKind:
+      type: string
+      enum: [image, audio, video, model]
+
+    Work:
+      type: object
+      required:
+        - id
+        - artist_id
+        - artist_name
+        - title
+        - story
+        - category
+        - media_url
+        - media_kind
+        - proof_urls
+        - sha256
+        - human_proven
+        - ai_declared
+        - month
+        - created_at
+        - votes
+      properties:
+        id: { type: string, format: uuid }
+        artist_id: { type: string, format: uuid }
+        artist_name: { type: string }
+        title: { type: string }
+        story: { type: string }
+        category: { $ref: "#/components/schemas/CategoryId" }
+        media_url: { type: string, format: uri }
+        media_kind: { $ref: "#/components/schemas/MediaKind" }
+        proof_urls:
+          type: array
+          items: { type: string, format: uri }
+        sha256: { type: string, pattern: "^[0-9a-f]{64}$" }
+        human_proven: { type: boolean, description: "Human-made badge: proof of process, not AI-declared" }
+        ai_declared: { type: boolean }
+        month: { $ref: "#/components/schemas/Month" }
+        created_at: { type: string, format: date-time }
+        votes: { type: integer, minimum: 0 }
+
+    MuseumSlot:
+      type: object
+      required: [work, kind, position, rotation_y]
+      properties:
+        work: { $ref: "#/components/schemas/Work" }
+        kind:
+          type: string
+          enum: [wall, plinth]
+          description: wall for images and videos (facing the room centre), plinth for 3D models and audio
+        position:
+          type: array
+          description: "[x, y, z] in metres, floor at y = 0. Wall: centre of the work (eye height). Plinth: top of the plinth, where the work stands. Entrance at +z."
+          minItems: 3
+          maxItems: 3
+          items: { type: number }
+        rotation_y: { type: number, description: radians }
+
+    Museum:
+      type: object
+      required: [artist, room, slots]
+      properties:
+        artist: { $ref: "#/components/schemas/Artist" }
+        room:
+          type: object
+          required: [width, depth, height]
+          description: Box centred on the origin, in metres
+          properties:
+            width: { type: number }
+            depth: { type: number }
+            height: { type: number }
+        slots:
+          type: array
+          items: { $ref: "#/components/schemas/MuseumSlot" }
+
+    Vote:
+      type: object
+      required: [work_id, category, month]
+      properties:
+        work_id: { type: string, format: uuid }
+        category: { $ref: "#/components/schemas/CategoryId" }
+        month: { $ref: "#/components/schemas/Month" }
+
+    HallOfFameEntry:
+      type: object
+      required: [rank, work, votes]
+      properties:
+        rank: { type: integer, minimum: 1, maximum: 5 }
+        work: { $ref: "#/components/schemas/Work" }
+        votes: { type: integer, minimum: 0 }
+
+    Practice:
+      type: object
+      required:
+        - id
+        - name
+        - region
+        - category
+        - practitioners
+        - learners
+        - median_age
+        - status
+        - description
+      properties:
+        id: { type: string, examples: [kabary] }
+        name: { type: string, examples: [Kabary] }
+        region: { type: string, examples: [Madagascar] }
+        category: { $ref: "#/components/schemas/CategoryId" }
+        practitioners: { type: integer, minimum: 0 }
+        learners: { type: integer, minimum: 0 }
+        median_age: { type: integer, minimum: 0 }
+        status:
+          type: string
+          enum: [red, orange, green]
+          description: |
+            red when learners < practitioners / 2 or median_age ≥ 60;
+            orange when learners < practitioners; green otherwise
+        description: { type: string }
+
+    KnownWork:
+      type: object
+      required: [title, artist_name, date, museum, source_url, image_url]
+      properties:
+        title: { type: string, examples: [Mona Lisa] }
+        artist_name: { type: string }
+        date: { type: string, examples: ["c. 1503–1519"] }
+        museum: { type: string }
+        source_url: { type: string, format: uri }
+        image_url: { type: string, format: uri }
+
+    ScanResult:
+      type: object
+      required: [status, confidence, work, known, sources]
+      properties:
+        status:
+          type: string
+          enum: [human_proven, artiko_work, known_work, ai_made, unknown]
+          description: |
+            human_proven: an Artiko work with proof of process.
+            artiko_work: an Artiko work without proof, or declared AI-assisted.
+            known_work: a public-domain work from an open museum collection.
+            ai_made: the file carries Content Credentials (C2PA) naming an AI tool.
+            unknown: nothing found; this never means fake.
+        confidence: { type: number, minimum: 0, maximum: 1 }
+        work:
+          oneOf:
+            - { $ref: "#/components/schemas/Work" }
+            - { type: "null" }
+        known:
+          oneOf:
+            - { $ref: "#/components/schemas/KnownWork" }
+            - { type: "null" }
+        sources:
+          type: array
+          items:
+            type: object
+            required: [label, url]
+            properties:
+              label: { type: string }
+              url: { type: string, format: uri }
