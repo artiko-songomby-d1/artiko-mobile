@@ -10,7 +10,11 @@ import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 @Composable
 fun ExpositionPage(content: ExpositionContent, onOpenArtView: (String) -> Unit) {
-    FeedList(works = content.works, onOpenArtView = onOpenArtView) {
+    FeedList(
+        works = content.works,
+        onOpenArtView = onOpenArtView,
+        emptyMessage = "No art in this exposition yet",
+    ) {
         Text(content.exposition.title, style = MaterialTheme.typography.headlineMedium)
         Text(content.exposition.description)
     }
