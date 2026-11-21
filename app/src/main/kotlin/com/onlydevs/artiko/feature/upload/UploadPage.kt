@@ -39,7 +39,12 @@ fun UploadPage(
     onPickMedia: () -> Unit,
     onPublish: () -> Unit,
 ) {
-    val ready = mediaName != null && draft.title.isNotBlank() && draft.category.isNotEmpty()
+    val missing = listOfNotNull(
+        "a file".takeIf { mediaName == null },
+        "a title".takeIf { draft.title.isBlank() },
+        "a category".takeIf { draft.category.isEmpty() },
+    )
+    val ready = missing.isEmpty()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -85,6 +90,9 @@ fun UploadPage(
         }
 
         ArtikoButton(text = "Publish", onClick = onPublish, enabled = ready && publication != LoadState.Loading)
+        if (missing.isNotEmpty()) {
+            Text("Still needed to publish: ${missing.joinToString(", ")}.", style = ArtikoText.meta)
+        }
         PublicationStatus(publication)
     }
 }
