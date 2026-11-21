@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,7 +24,9 @@ fun FeedList(
     emptyMessage: String = "Nothing to show yet",
     header: @Composable () -> Unit = {},
 ) {
+    val listState = rememberLazyListState()
     LazyColumn(
+        state = listState,
         modifier = modifier.fillMaxSize().statusBarsPadding(),
         contentPadding = PaddingValues(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
@@ -35,7 +38,11 @@ fun FeedList(
             item { EmptyPlaceholder(emptyMessage) }
         }
         items(works, key = { it.id }) { work ->
-            ArtCard(work = work, onClick = { onOpenArtView(work.id) })
+            ArtCard(
+                work = work,
+                onClick = { onOpenArtView(work.id) },
+                modifier = Modifier.galleryDepth(listState, work.id),
+            )
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +24,17 @@ import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 private val CARD_HEIGHT = 220.dp
+private val FRAME_ELEVATION = 6.dp
 private val OVERLAY_PADDING = 12.dp
 private const val OVERLAY_ALPHA = 0.6f
 
 @Composable
 fun ArtCard(work: Work, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Card(onClick = onClick, modifier = modifier.fillMaxWidth().height(CARD_HEIGHT)) {
+    Card(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth().height(CARD_HEIGHT),
+        elevation = CardDefaults.cardElevation(defaultElevation = FRAME_ELEVATION),
+    ) {
         Box(Modifier.fillMaxSize()) {
             ArtThumbnail(work)
             Column(

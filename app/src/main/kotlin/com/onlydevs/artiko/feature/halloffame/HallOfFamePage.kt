@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,11 +21,14 @@ import com.onlydevs.artiko.ui.ArtCard
 import com.onlydevs.artiko.ui.EmptyPlaceholder
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
+import com.onlydevs.artiko.ui.galleryDepth
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 @Composable
 fun HallOfFamePage(halls: List<CategoryHall>, onOpenArtView: (String) -> Unit) {
+    val listState = rememberLazyListState()
     LazyColumn(
+        state = listState,
         modifier = Modifier.fillMaxSize().statusBarsPadding(),
         contentPadding = PaddingValues(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
@@ -38,7 +42,10 @@ fun HallOfFamePage(halls: List<CategoryHall>, onOpenArtView: (String) -> Unit) {
                 Text(hall.category.label, style = MaterialTheme.typography.titleLarge)
             }
             items(hall.entries, key = { it.work.id }) { entry ->
-                Column(verticalArrangement = Arrangement.spacedBy(FEED_SPACING)) {
+                Column(
+                    modifier = Modifier.galleryDepth(listState, entry.work.id),
+                    verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
+                ) {
                     Text("#${entry.rank} with ${entry.votes} votes")
                     ArtCard(work = entry.work, onClick = { onOpenArtView(entry.work.id) })
                 }
