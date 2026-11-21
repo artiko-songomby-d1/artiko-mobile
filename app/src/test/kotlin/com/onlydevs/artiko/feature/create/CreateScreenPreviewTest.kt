@@ -6,6 +6,6 @@ import org.junit.Test
 class CreateScreenPreviewTest : ScreenPreviewTest() {
     @Test
     fun capturesCreateScreen() {
-        capture("create") { CreateScreen() }
+        capture("create") { CreateScreen(onScan = {}, onUpload = {}, onRecord = {}) }
     }
 }
