@@ -19,7 +19,10 @@ import com.onlydevs.artiko.feature.exposition.ExpositionScreen
 import com.onlydevs.artiko.feature.halloffame.HallOfFameScreen
 import com.onlydevs.artiko.feature.learn.LearnScreen
 import com.onlydevs.artiko.feature.profile.ProfileScreen
+import com.onlydevs.artiko.feature.record.RecordScreen
+import com.onlydevs.artiko.feature.scan.ScanScreen
 import com.onlydevs.artiko.feature.settings.SettingsScreen
+import com.onlydevs.artiko.feature.upload.UploadScreen
 
 private const val DEPTH_MILLIS = 320
 private const val NEAR_SCALE = 0.92f
@@ -48,7 +51,16 @@ fun ArtikoNavHost(navController: NavHostController, modifier: Modifier = Modifie
                 onOpenArtView = openArtView,
             )
         }
-        composable<CreateRoute> { CreateScreen() }
+        composable<CreateRoute> {
+            CreateScreen(
+                onScan = { navController.navigate(ScanRoute) },
+                onUpload = { navController.navigate(UploadRoute) },
+                onRecord = { navController.navigate(RecordRoute) },
+            )
+        }
+        composable<ScanRoute> { ScanScreen() }
+        composable<UploadRoute> { UploadScreen() }
+        composable<RecordRoute> { RecordScreen() }
         composable<LearnRoute> { LearnScreen() }
         composable<ProfileRoute> {
             ProfileScreen(onOpenSettings = { navController.navigate(SettingsRoute) })

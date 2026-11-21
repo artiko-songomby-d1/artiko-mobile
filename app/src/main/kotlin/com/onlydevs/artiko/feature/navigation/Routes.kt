@@ -15,6 +15,15 @@ data object LearnRoute
 data object ProfileRoute
 
 @Serializable
+data object ScanRoute
+
+@Serializable
+data object UploadRoute
+
+@Serializable
+data object RecordRoute
+
+@Serializable
 data object HallOfFameRoute
 
 @Serializable
