@@ -17,6 +17,7 @@ import com.onlydevs.artiko.data.HallOfFameEntry
 import com.onlydevs.artiko.data.MediaKind
 import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.ArtCard
+import com.onlydevs.artiko.ui.EmptyPlaceholder
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
@@ -30,7 +31,7 @@ fun HallOfFamePage(halls: List<CategoryHall>, onOpenArtView: (String) -> Unit) {
     ) {
         item { Text("Hall of Fame", style = MaterialTheme.typography.headlineMedium) }
         if (halls.isEmpty()) {
-            item { Text("No votes yet this month") }
+            item { EmptyPlaceholder("No votes yet this month") }
         }
         halls.forEach { hall ->
             item(key = hall.category.id) {
