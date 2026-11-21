@@ -60,6 +60,4 @@ class FakeArtikoApi(
     }
 }
 
-private fun Work.matches(query: String) =
-    listOf(title, story, artistName).any { it.contains(query, ignoreCase = true) }
-
+private fun Work.matches(query: String) = listOf(title, story, artistName).any { it.contains(query, ignoreCase = true) }
