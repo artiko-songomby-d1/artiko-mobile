@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.onlydevs.artiko.data.MediaKind
 import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.theme.ArtikoText
-import com.onlydevs.artiko.ui.theme.LocalAppSettings
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
+import com.onlydevs.artiko.ui.theme.LocalAppSettings
 
 private val CARD_HEIGHT = 220.dp
 private val FRAME_ELEVATION = 10.dp

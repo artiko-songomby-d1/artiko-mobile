@@ -12,8 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.onlydevs.artiko.R
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
-import com.onlydevs.artiko.ui.SectionRow
 import com.onlydevs.artiko.ui.ScreenHeader
+import com.onlydevs.artiko.ui.SectionRow
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 /** The list of settings sections; each row opens its own page. */

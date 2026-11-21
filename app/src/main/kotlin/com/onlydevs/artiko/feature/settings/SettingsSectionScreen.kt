@@ -46,7 +46,9 @@ fun SettingsSectionScreen(section: SettingsSection, onBack: () -> Unit) {
         ScreenHeader(title = stringResource(section.title), onBack = onBack)
         when (section) {
             SettingsSection.Appearance -> AppearancePage(settings, viewModel::change)
+
             SettingsSection.Accessibility -> AccessibilityPage(settings, viewModel::change)
+
             SettingsSection.Data -> DataPage(
                 settings = settings,
                 onChange = viewModel::change,
@@ -58,6 +60,7 @@ fun SettingsSectionScreen(section: SettingsSection, onBack: () -> Unit) {
                     cacheCleared = true
                 },
             )
+
             SettingsSection.Account -> AccountPage(
                 user = user,
                 state = account,
@@ -65,6 +68,7 @@ fun SettingsSectionScreen(section: SettingsSection, onBack: () -> Unit) {
                 onSignUp = viewModel::signUp,
                 onSignOut = viewModel::signOut,
             )
+
             SettingsSection.About -> AboutPage(
                 versionName = BuildConfig.VERSION_NAME,
                 serverUrl = BuildConfig.API_BASE_URL,

@@ -17,10 +17,8 @@ import kotlinx.coroutines.launch
 /** What the account page shows besides the account itself: a request in progress, or why it failed. */
 data class AccountState(val busy: Boolean = false, val failure: AuthFailure? = null)
 
-class SettingsViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val auth: AuthRepository,
-) : ViewModel() {
+class SettingsViewModel(private val settingsRepository: SettingsRepository, private val auth: AuthRepository) :
+    ViewModel() {
     val settings: StateFlow<AppSettings> =
         settingsRepository.settings.stateIn(viewModelScope, SharingStarted.Eagerly, AppSettings())
     val user = auth.user
