@@ -1,7 +1,6 @@
 package com.onlydevs.artiko.data.auth
 
 import android.content.Context
-import android.util.Base64
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -13,6 +12,7 @@ import com.google.crypto.tink.RegistryConfiguration
 import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
 import com.onlydevs.artiko.data.artikoJson
+import java.util.Base64
 import kotlinx.coroutines.flow.first
 
 private const val KEYSET_NAME = "artiko_session_keyset"
@@ -41,7 +41,7 @@ class TinkSessionStore(private val dataStore: DataStore<Preferences>, private va
 
     override suspend fun save(session: Session) {
         val sealed = aead.encrypt(artikoJson.encodeToString(session).toByteArray(), ASSOCIATED_DATA)
-        dataStore.edit { it[SESSION_KEY] = Base64.encodeToString(sealed, Base64.NO_WRAP) }
+        dataStore.edit { it[SESSION_KEY] = Base64.getEncoder().encodeToString(sealed) }
     }
 
     override suspend fun clear() {
@@ -50,7 +50,7 @@ class TinkSessionStore(private val dataStore: DataStore<Preferences>, private va
 
     // A session that cannot be decrypted (the key was reset) is treated as signed out.
     private fun decrypt(stored: String): Session? = runCatching {
-        val plain = aead.decrypt(Base64.decode(stored, Base64.NO_WRAP), ASSOCIATED_DATA)
+        val plain = aead.decrypt(Base64.getDecoder().decode(stored), ASSOCIATED_DATA)
         artikoJson.decodeFromString<Session>(String(plain))
     }.getOrNull()
 }
