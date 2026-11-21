@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
@@ -27,13 +28,15 @@ private val DOT_INSET = 5.dp
 private val START_PADDING = 22.dp
 private val GAP = 12.dp
 private val ARROW_SIZE = 16.dp
+private const val DISABLED_ALPHA = 0.4f
 
 /** The call to action of artiko-web: an ink pill with a red dot that holds an arrow. */
 @Composable
-fun ArtikoButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ArtikoButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     Surface(
         onClick = onClick,
-        modifier = modifier.height(HEIGHT),
+        enabled = enabled,
+        modifier = modifier.height(HEIGHT).alpha(if (enabled) 1f else DISABLED_ALPHA),
         shape = CircleShape,
         color = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,

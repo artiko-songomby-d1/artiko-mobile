@@ -19,12 +19,13 @@ private val VERTICAL_PADDING = 8.dp
 
 /** An outlined pill, the tag style of artiko-web. */
 @Composable
-fun ExpositionChip(title: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ExpositionChip(title: String, onClick: () -> Unit, modifier: Modifier = Modifier, selected: Boolean = false) {
     Surface(
         onClick = onClick,
         modifier = modifier,
         shape = CircleShape,
-        color = Color.Transparent,
+        color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+        contentColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
         border = BorderStroke(BORDER_WIDTH, MaterialTheme.colorScheme.outline),
     ) {
         Text(
