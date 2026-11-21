@@ -14,6 +14,7 @@ serialization = "1.13.0"
 coroutines = "1.11.0"
 lifecycle = "2.11.1"
 coil = "3.6.3"
+camerax = "1.7.0"
 robolectric = "4.18.1"
 
 [libraries]
@@ -39,6 +40,10 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
+camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax" }
+camera-video = { module = "androidx.camera:camera-video", version.ref = "camerax" }
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
