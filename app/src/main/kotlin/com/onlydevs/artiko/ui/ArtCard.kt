@@ -50,7 +50,7 @@ fun ArtCard(work: Work, onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun ArtThumbnail(work: Work) {
-    if (work.mediaKind == MediaKind.Image) {
+    if (work.mediaKind == MediaKind.Image && work.mediaUrl.isNotBlank()) {
         AsyncImage(
             model = work.mediaUrl,
             contentDescription = work.title,
@@ -58,11 +58,16 @@ private fun ArtThumbnail(work: Work) {
             modifier = Modifier.fillMaxSize(),
         )
     } else {
-        Box(
-            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(work.mediaKind.name)
+        Box(modifier = Modifier.fillMaxSize()) {
+            GeneratedCover(seed = work.id)
+            if (work.mediaKind != MediaKind.Image) {
+                Text(
+                    text = work.mediaKind.name.uppercase(),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.TopEnd).padding(OVERLAY_PADDING),
+                )
+            }
         }
     }
 }
