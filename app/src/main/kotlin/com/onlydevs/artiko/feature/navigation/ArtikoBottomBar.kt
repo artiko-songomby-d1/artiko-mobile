@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.onlydevs.artiko.ui.pressScale
@@ -47,7 +46,7 @@ fun ArtikoBottomBar(selectedTab: TopLevelTab?, onTabSelected: (TopLevelTab) -> U
     Surface(
         modifier = Modifier.navigationBarsPadding().padding(BAR_MARGIN),
         shape = RoundedCornerShape(BAR_CORNER),
-        color = Color.White.copy(alpha = GLASS_ALPHA),
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = GLASS_ALPHA),
         border = BorderStroke(BORDER_WIDTH, MaterialTheme.colorScheme.onBackground.copy(alpha = BORDER_ALPHA)),
         shadowElevation = BAR_ELEVATION,
     ) {

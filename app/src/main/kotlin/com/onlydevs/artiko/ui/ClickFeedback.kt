@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import com.onlydevs.artiko.ui.theme.LocalAppSettings
 
 private const val PRESSED_SCALE = 0.95f
 
@@ -18,7 +19,8 @@ private const val PRESSED_SCALE = 0.95f
 @Composable
 fun Modifier.pressScale(interactionSource: InteractionSource): Modifier {
     val pressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(targetValue = if (pressed) PRESSED_SCALE else 1f, label = "pressScale")
+    val moving = !LocalAppSettings.current.reduceMotion
+    val scale by animateFloatAsState(targetValue = if (pressed && moving) PRESSED_SCALE else 1f, label = "pressScale")
     return graphicsLayer {
         scaleX = scale
         scaleY = scale
@@ -29,10 +31,11 @@ fun Modifier.pressScale(interactionSource: InteractionSource): Modifier {
 @Composable
 fun rememberHapticClick(onClick: () -> Unit): () -> Unit {
     val haptics = LocalHapticFeedback.current
+    val enabled = LocalAppSettings.current.haptics
     val latest by rememberUpdatedState(onClick)
-    return remember(haptics) {
+    return remember(haptics, enabled) {
         {
-            haptics.performHapticFeedback(HapticFeedbackType.ContextClick)
+            if (enabled) haptics.performHapticFeedback(HapticFeedbackType.ContextClick)
             latest()
         }
     }

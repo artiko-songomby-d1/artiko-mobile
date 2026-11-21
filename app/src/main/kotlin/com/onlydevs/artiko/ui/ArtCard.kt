@@ -27,10 +27,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.onlydevs.artiko.data.MediaKind
 import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.theme.ArtikoText
+import com.onlydevs.artiko.ui.theme.LocalAppSettings
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 private val CARD_HEIGHT = 220.dp
@@ -47,7 +47,8 @@ private const val META_ALPHA = 0.85f
 fun ArtCard(work: Work, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
-    val press by animateFloatAsState(targetValue = if (pressed) 1f else 0f, label = "press")
+    val settings = LocalAppSettings.current
+    val press by animateFloatAsState(targetValue = if (pressed && !settings.reduceMotion) 1f else 0f, label = "press")
     Card(
         onClick = rememberHapticClick(onClick),
         modifier = modifier
@@ -56,7 +57,7 @@ fun ArtCard(work: Work, onClick: () -> Unit, modifier: Modifier = Modifier) {
             .graphicsLayer {
                 scaleX = 1f - PRESS_SCALE_DROP * press
                 scaleY = scaleX
-                rotationX = PRESS_TILT_DEGREES * press
+                rotationX = if (settings.depthEffects) PRESS_TILT_DEGREES * press else 0f
             },
         elevation = CardDefaults.cardElevation(defaultElevation = FRAME_ELEVATION),
         interactionSource = interactionSource,
@@ -87,12 +88,7 @@ fun ArtCard(work: Work, onClick: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun ArtThumbnail(work: Work) {
     if (work.mediaKind == MediaKind.Image && work.mediaUrl.isNotBlank()) {
-        AsyncImage(
-            model = work.mediaUrl,
-            contentDescription = work.title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-        )
+        ArtImage(url = work.mediaUrl, contentDescription = work.title)
     } else {
         Box(modifier = Modifier.fillMaxSize()) {
             GeneratedCover(seed = work.id)

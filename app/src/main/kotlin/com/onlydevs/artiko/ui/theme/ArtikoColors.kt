@@ -1,5 +1,6 @@
 package com.onlydevs.artiko.ui.theme
 
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
@@ -31,4 +32,27 @@ val artikoColorScheme = lightColorScheme(
     surfaceContainerHighest = Cream,
     outline = Ink,
     outlineVariant = Ink.copy(alpha = SOFT_LINE_ALPHA),
+)
+
+private val NightWall = Color(0xFF1B1918)
+private val NightPaper = Color(0xFF2A2725)
+private val NightMuted = Color(0xFFB7B0AC)
+
+val artikoDarkColorScheme = darkColorScheme(
+    primary = Cream,
+    onPrimary = Ink,
+    secondary = Red,
+    onSecondary = Paper,
+    tertiary = Red,
+    secondaryContainer = NightPaper,
+    onSecondaryContainer = Cream,
+    background = NightWall,
+    onBackground = Cream,
+    surface = NightWall,
+    onSurface = Cream,
+    onSurfaceVariant = NightMuted,
+    surfaceContainer = NightPaper,
+    surfaceContainerHighest = NightPaper,
+    outline = Cream,
+    outlineVariant = Cream.copy(alpha = SOFT_LINE_ALPHA),
 )

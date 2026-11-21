@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import com.onlydevs.artiko.ui.theme.LocalAppSettings
 import kotlinx.coroutines.launch
 
 private const val MAX_TILT_DEGREES = 25f
@@ -26,6 +27,7 @@ fun nextTilt(current: Float, dragPixels: Float): Float =
 /** Turns the artwork like a picture on a pivot while dragging sideways, with a sheen that follows the light. */
 @Composable
 fun Modifier.tiltOnDrag(): Modifier {
+    if (!LocalAppSettings.current.depthEffects) return this
     val tilt = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
     val settle: () -> Unit = { scope.launch { tilt.animateTo(0f, spring()) } }

@@ -20,9 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.onlydevs.artiko.data.MediaKind
 import com.onlydevs.artiko.data.Work
+import com.onlydevs.artiko.ui.ArtImage
 import com.onlydevs.artiko.ui.ExpositionChip
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
@@ -63,11 +63,11 @@ fun ArtViewPage(work: Work, onExit: () -> Unit, onOpenArtist: (String) -> Unit) 
 @Composable
 private fun ArtMedia(work: Work, modifier: Modifier = Modifier) {
     if (work.mediaKind == MediaKind.Image && work.mediaUrl.isNotBlank()) {
-        AsyncImage(
-            model = work.mediaUrl,
+        ArtImage(
+            url = work.mediaUrl,
             contentDescription = work.title,
-            contentScale = ContentScale.FillWidth,
             modifier = modifier.fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
         )
     } else {
         Box(

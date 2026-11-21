@@ -1,5 +1,7 @@
 package com.onlydevs.artiko.feature.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,6 +25,7 @@ import com.onlydevs.artiko.feature.record.RecordScreen
 import com.onlydevs.artiko.feature.scan.ScanScreen
 import com.onlydevs.artiko.feature.settings.SettingsScreen
 import com.onlydevs.artiko.feature.upload.UploadScreen
+import com.onlydevs.artiko.ui.theme.LocalAppSettings
 
 private const val DEPTH_MILLIS = 320
 private const val NEAR_SCALE = 0.92f
@@ -35,14 +38,19 @@ fun ArtikoNavHost(navController: NavHostController, modifier: Modifier = Modifie
 
     // Going forward walks into the next picture, going back steps away from it.
     val fade = tween<Float>(DEPTH_MILLIS)
+    val still = LocalAppSettings.current.reduceMotion
+    val forwardIn = if (still) EnterTransition.None else fadeIn(fade) + scaleIn(fade, initialScale = NEAR_SCALE)
+    val forwardOut = if (still) ExitTransition.None else fadeOut(fade) + scaleOut(fade, targetScale = FAR_SCALE)
+    val backIn = if (still) EnterTransition.None else fadeIn(fade) + scaleIn(fade, initialScale = FAR_SCALE)
+    val backOut = if (still) ExitTransition.None else fadeOut(fade) + scaleOut(fade, targetScale = NEAR_SCALE)
     NavHost(
         navController = navController,
         startDestination = DiscoveryRoute,
         modifier = modifier,
-        enterTransition = { fadeIn(fade) + scaleIn(fade, initialScale = NEAR_SCALE) },
-        exitTransition = { fadeOut(fade) + scaleOut(fade, targetScale = FAR_SCALE) },
-        popEnterTransition = { fadeIn(fade) + scaleIn(fade, initialScale = FAR_SCALE) },
-        popExitTransition = { fadeOut(fade) + scaleOut(fade, targetScale = NEAR_SCALE) },
+        enterTransition = { forwardIn },
+        exitTransition = { forwardOut },
+        popEnterTransition = { backIn },
+        popExitTransition = { backOut },
     ) {
         composable<DiscoveryRoute> {
             DiscoveryScreen(

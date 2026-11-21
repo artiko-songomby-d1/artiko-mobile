@@ -1,6 +1,8 @@
 package com.onlydevs.artiko.ui.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -55,9 +57,9 @@ val artikoTypography = Typography(
         lineHeight = 26.sp,
     ),
     titleSmall = base.titleSmall.copy(fontFamily = Sans, fontWeight = FontWeight.Medium),
-    bodyLarge = base.bodyLarge.copy(fontFamily = Sans, fontSize = 17.sp, lineHeight = 27.sp, color = BodyText),
-    bodyMedium = base.bodyMedium.copy(fontFamily = Sans, fontSize = 15.5.sp, lineHeight = 24.5.sp, color = BodyText),
-    bodySmall = base.bodySmall.copy(fontFamily = Sans, fontSize = 13.sp, lineHeight = 20.sp, color = Muted),
+    bodyLarge = base.bodyLarge.copy(fontFamily = Sans, fontSize = 17.sp, lineHeight = 27.sp),
+    bodyMedium = base.bodyMedium.copy(fontFamily = Sans, fontSize = 15.5.sp, lineHeight = 24.5.sp),
+    bodySmall = base.bodySmall.copy(fontFamily = Sans, fontSize = 13.sp, lineHeight = 20.sp),
     labelLarge = base.labelLarge.copy(fontFamily = Sans, fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
     labelMedium = base.labelMedium.copy(fontFamily = Sans, fontSize = 14.sp, fontWeight = FontWeight.Medium),
     labelSmall = base.labelSmall.copy(
@@ -68,27 +70,30 @@ val artikoTypography = Typography(
     ),
 )
 
-/** Text styles of artiko-web that Material has no slot for. */
+/** Text styles of artiko-web that Material has no slot for; their colors follow the light or dark theme. */
 object ArtikoText {
-    val meta = TextStyle(
-        fontFamily = Serif,
-        fontStyle = FontStyle.Italic,
-        fontWeight = FontWeight.Medium,
-        fontSize = 19.sp,
-        color = Muted,
-    )
-    val number = TextStyle(
-        fontFamily = Serif,
-        fontStyle = FontStyle.Italic,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 26.sp,
-        color = RedDeep,
-    )
-    val activeTab = TextStyle(
-        fontFamily = Serif,
-        fontStyle = FontStyle.Italic,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 17.sp,
-        color = RedDeep,
-    )
+    val meta: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = Serif,
+            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.Medium,
+            fontSize = 19.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    val number: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = Serif,
+            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 26.sp,
+            color = MaterialTheme.colorScheme.tertiary,
+        )
+    val activeTab: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = Serif,
+            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 17.sp,
+            color = MaterialTheme.colorScheme.tertiary,
+        )
 }

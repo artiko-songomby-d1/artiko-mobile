@@ -1,8 +1,10 @@
 package com.onlydevs.artiko.ui
 
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import com.onlydevs.artiko.ui.theme.LocalAppSettings
 import kotlin.math.abs
 
 private const val MAX_TILT_DEGREES = 18f
@@ -20,17 +22,21 @@ fun depthPose(itemCenter: Float, viewportCenter: Float, viewportHeight: Float): 
 }
 
 /** Gives the item with [key] a perspective that depends on where it sits in the visible list. */
-fun Modifier.galleryDepth(listState: LazyListState, key: Any): Modifier = graphicsLayer {
-    val layout = listState.layoutInfo
-    val item = layout.visibleItemsInfo.firstOrNull { it.key == key } ?: return@graphicsLayer
-    val pose = depthPose(
-        itemCenter = item.offset + item.size / 2f,
-        viewportCenter = (layout.viewportStartOffset + layout.viewportEndOffset) / 2f,
-        viewportHeight = layout.viewportSize.height.toFloat(),
-    )
-    rotationX = pose.rotationX
-    scaleX = pose.scale
-    scaleY = pose.scale
-    alpha = pose.alpha
-    cameraDistance = CAMERA_DISTANCE * density
+@Composable
+fun Modifier.galleryDepth(listState: LazyListState, key: Any): Modifier {
+    if (!LocalAppSettings.current.depthEffects) return this
+    return graphicsLayer {
+        val layout = listState.layoutInfo
+        val item = layout.visibleItemsInfo.firstOrNull { it.key == key } ?: return@graphicsLayer
+        val pose = depthPose(
+            itemCenter = item.offset + item.size / 2f,
+            viewportCenter = (layout.viewportStartOffset + layout.viewportEndOffset) / 2f,
+            viewportHeight = layout.viewportSize.height.toFloat(),
+        )
+        rotationX = pose.rotationX
+        scaleX = pose.scale
+        scaleY = pose.scale
+        alpha = pose.alpha
+        cameraDistance = CAMERA_DISTANCE * density
+    }
 }
