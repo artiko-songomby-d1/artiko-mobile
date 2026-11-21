@@ -13,6 +13,7 @@ import com.onlydevs.artiko.ui.EmptyPlaceholder
 import com.onlydevs.artiko.ui.ExpositionChip
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.FeedList
+import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 private val EMPTY_EXPOSITIONS_HEIGHT = 56.dp
@@ -25,9 +26,9 @@ fun ArtistPage(content: ArtistContent, onOpenExposition: (String) -> Unit, onOpe
         emptyMessage = "No art from this artist yet",
     ) {
         Text(content.artist.displayName, style = MaterialTheme.typography.headlineMedium)
-        Text(content.artist.region, style = MaterialTheme.typography.labelLarge)
+        Text(content.artist.region, style = ArtikoText.meta)
         Text(content.artist.bio)
-        Text("Expositions", style = MaterialTheme.typography.titleMedium)
+        Text("Expositions", style = MaterialTheme.typography.titleLarge)
         if (content.expositions.isEmpty()) {
             EmptyPlaceholder(message = "No expositions yet", height = EMPTY_EXPOSITIONS_HEIGHT)
         }
