@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -12,6 +13,7 @@ import com.onlydevs.artiko.feature.navigation.ArtikoBottomBar
 import com.onlydevs.artiko.feature.navigation.ArtikoNavHost
 import com.onlydevs.artiko.feature.navigation.TopLevelTab
 import com.onlydevs.artiko.feature.navigation.navigateToTab
+import com.onlydevs.artiko.ui.GalleryWall
 
 @Composable
 fun ArtikoApp() {
@@ -21,13 +23,16 @@ fun ArtikoApp() {
         destination?.hierarchy?.any { it.hasRoute(tab.route::class) } == true
     }
 
-    Scaffold(
-        bottomBar = {
-            if (selectedTab != null) {
-                ArtikoBottomBar(selectedTab, onTabSelected = navController::navigateToTab)
-            }
-        },
-    ) { innerPadding ->
-        ArtikoNavHost(navController, Modifier.padding(innerPadding))
+    GalleryWall {
+        Scaffold(
+            containerColor = Color.Transparent,
+            bottomBar = {
+                if (selectedTab != null) {
+                    ArtikoBottomBar(selectedTab, onTabSelected = navController::navigateToTab)
+                }
+            },
+        ) { innerPadding ->
+            ArtikoNavHost(navController, Modifier.padding(innerPadding))
+        }
     }
 }

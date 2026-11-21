@@ -1,5 +1,10 @@
 package com.onlydevs.artiko.feature.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -16,12 +21,26 @@ import com.onlydevs.artiko.feature.learn.LearnScreen
 import com.onlydevs.artiko.feature.profile.ProfileScreen
 import com.onlydevs.artiko.feature.settings.SettingsScreen
 
+private const val DEPTH_MILLIS = 320
+private const val NEAR_SCALE = 0.92f
+private const val FAR_SCALE = 1.06f
+
 @Composable
 fun ArtikoNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
     val openArtView = { workId: String -> navController.navigate(ArtViewRoute(workId)) }
     val openExposition = { expositionId: String -> navController.navigate(ExpositionRoute(expositionId)) }
 
-    NavHost(navController = navController, startDestination = DiscoveryRoute, modifier = modifier) {
+    // Going forward walks into the next picture, going back steps away from it.
+    val fade = tween<Float>(DEPTH_MILLIS)
+    NavHost(
+        navController = navController,
+        startDestination = DiscoveryRoute,
+        modifier = modifier,
+        enterTransition = { fadeIn(fade) + scaleIn(fade, initialScale = NEAR_SCALE) },
+        exitTransition = { fadeOut(fade) + scaleOut(fade, targetScale = FAR_SCALE) },
+        popEnterTransition = { fadeIn(fade) + scaleIn(fade, initialScale = FAR_SCALE) },
+        popExitTransition = { fadeOut(fade) + scaleOut(fade, targetScale = NEAR_SCALE) },
+    ) {
         composable<DiscoveryRoute> {
             DiscoveryScreen(
                 onOpenHallOfFame = { navController.navigate(HallOfFameRoute) },
