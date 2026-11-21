@@ -2,6 +2,7 @@ package com.onlydevs.artiko.ui.camera
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -14,9 +15,11 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 fun CameraPreview(controller: LifecycleCameraController, modifier: Modifier = Modifier) {
     val lifecycleOwner = LocalLifecycleOwner.current
     AndroidView(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         factory = { context ->
             PreviewView(context).apply {
+                // Texture view: it can be clipped to rounded corners and drawn under the viewfinder frame.
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
                 this.controller = controller
                 controller.bindToLifecycle(lifecycleOwner)
             }
