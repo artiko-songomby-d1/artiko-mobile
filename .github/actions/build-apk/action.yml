@@ -1,0 +1,61 @@
+name: Build APK
+description: Assemble an apk and name it artiko-<commit>.apk
+inputs:
+  variant:
+    description: debug or release
+    required: true
+  version-name:
+    description: Overrides the version name computed by Gradle
+    default: ''
+  keystore-base64:
+    description: Base64 keystore used to sign the release variant
+    default: ''
+  keystore-password:
+    default: ''
+  key-alias:
+    default: ''
+  key-password:
+    default: ''
+outputs:
+  apk:
+    description: File name of the renamed apk, at the repository root
+    value: ${{ steps.rename.outputs.apk }}
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup-android
+
+    - name: Decode keystore
+      if: inputs.keystore-base64 != ''
+      shell: bash
+      env:
+        KEYSTORE_BASE64: ${{ inputs.keystore-base64 }}
+        KEYSTORE_PASSWORD: ${{ inputs.keystore-password }}
+        KEY_ALIAS: ${{ inputs.key-alias }}
+        KEY_PASSWORD: ${{ inputs.key-password }}
+      run: |
+        echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+        {
+          echo "KEYSTORE_PATH=$RUNNER_TEMP/release.keystore"
+          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD"
+          echo "KEY_ALIAS=$KEY_ALIAS"
+          echo "KEY_PASSWORD=$KEY_PASSWORD"
+        } >> "$GITHUB_ENV"
+
+    - name: Assemble
+      shell: bash
+      env:
+        VARIANT: ${{ inputs.variant }}
+        VERSION_NAME: ${{ inputs.version-name }}
+      run: ./gradlew "assemble${VARIANT^}" ${VERSION_NAME:+-PappVersionName="$VERSION_NAME"}
+
+    - name: Rename
+      id: rename
+      shell: bash
+      env:
+        VARIANT: ${{ inputs.variant }}
+        COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+      run: |
+        apk="artiko-${COMMIT::7}.apk"
+        mv "app/build/outputs/apk/$VARIANT/app-$VARIANT.apk" "$apk"
+        echo "apk=$apk" >> "$GITHUB_OUTPUT"
