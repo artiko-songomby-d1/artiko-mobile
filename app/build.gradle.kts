@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ktlint)
 }
 
 val commitCount = runCatching {
@@ -50,6 +51,10 @@ android {
     buildFeatures {
         compose = true
     }
+}
+
+ktlint {
+    version = libs.versions.ktlint.get()
 }
 
 dependencies {
