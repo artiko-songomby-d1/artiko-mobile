@@ -1,0 +1,20 @@
+name: CI / Preview
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-android
+      - run: ./gradlew recordRoborazziDebug
+      - uses: actions/upload-artifact@v7
+        with:
+          name: screens-${{ github.event.pull_request.head.sha || github.sha }}
+          path: app/build/screenshots
+          if-no-files-found: error
