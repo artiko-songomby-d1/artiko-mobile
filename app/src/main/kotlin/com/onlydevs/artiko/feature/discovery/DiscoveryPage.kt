@@ -17,7 +17,7 @@ fun DiscoveryPage(
     onOpenExposition: (String) -> Unit,
     onOpenArtView: (String) -> Unit,
 ) {
-    FeedList(works = content.works, onOpenArtView = onOpenArtView) {
+    FeedList(works = content.works, onOpenArtView = onOpenArtView, emptyMessage = "No art yet") {
         LazyRow(horizontalArrangement = Arrangement.spacedBy(FEED_SPACING)) {
             item { ExpositionChip(title = "Hall of Fame", onClick = onOpenHallOfFame) }
             items(content.expositions, key = { it.id }) { exposition ->
