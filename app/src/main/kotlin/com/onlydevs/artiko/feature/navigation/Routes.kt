@@ -18,7 +18,7 @@ data object ProfileRoute
 data object ScanRoute
 
 @Serializable
-data object UploadRoute
+data class UploadRoute(val attachmentUri: String? = null)
 
 @Serializable
 data object RecordRoute

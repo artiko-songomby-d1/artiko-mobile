@@ -54,13 +54,15 @@ fun ArtikoNavHost(navController: NavHostController, modifier: Modifier = Modifie
         composable<CreateRoute> {
             CreateScreen(
                 onScan = { navController.navigate(ScanRoute) },
-                onUpload = { navController.navigate(UploadRoute) },
+                onUpload = { navController.navigate(UploadRoute()) },
                 onRecord = { navController.navigate(RecordRoute) },
             )
         }
         composable<ScanRoute> { ScanScreen() }
-        composable<UploadRoute> { UploadScreen() }
-        composable<RecordRoute> { RecordScreen() }
+        composable<UploadRoute> { entry -> UploadScreen(entry.toRoute<UploadRoute>().attachmentUri) }
+        composable<RecordRoute> {
+            RecordScreen(onUpload = { uri -> navController.navigate(UploadRoute(uri)) })
+        }
         composable<LearnRoute> { LearnScreen() }
         composable<ProfileRoute> {
             ProfileScreen(onOpenSettings = { navController.navigate(SettingsRoute) })
