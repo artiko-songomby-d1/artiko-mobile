@@ -1,0 +1,38 @@
+name: Publish / Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to publish, empty means 1.0.<commit count>
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: echo "name=${INPUT_VERSION:-1.0.$(git rev-list --count HEAD)}" >> "$GITHUB_OUTPUT"
+      - id: apk
+        uses: ./.github/actions/build-apk
+        with:
+          variant: release
+          version-name: ${{ steps.version.outputs.name }}
+          keystore-base64: ${{ secrets.KEYSTORE_BASE64 }}
+          keystore-password: ${{ secrets.KEYSTORE_PASSWORD }}
+          key-alias: ${{ secrets.KEY_ALIAS }}
+          key-password: ${{ secrets.KEY_PASSWORD }}
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.name }}
+          APK: ${{ steps.apk.outputs.apk }}
+        run: gh release create "v$VERSION" "$APK" --title "v$VERSION" --generate-notes --target "$GITHUB_SHA"
