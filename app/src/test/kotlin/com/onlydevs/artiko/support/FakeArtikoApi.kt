@@ -5,7 +5,9 @@ import com.onlydevs.artiko.data.Artist
 import com.onlydevs.artiko.data.Category
 import com.onlydevs.artiko.data.Exposition
 import com.onlydevs.artiko.data.HallOfFameEntry
+import com.onlydevs.artiko.data.ScanResult
 import com.onlydevs.artiko.data.Work
+import okhttp3.MultipartBody
 
 class FakeArtikoApi(
     var works: List<Work> = emptyList(),
@@ -13,6 +15,8 @@ class FakeArtikoApi(
     var expositions: List<Exposition> = emptyList(),
     var categories: List<Category> = emptyList(),
     var hallOfFame: Map<String, List<HallOfFameEntry>> = emptyMap(),
+    var scanResult: ScanResult? = null,
+    var published: Work? = null,
     var failure: Exception? = null,
 ) : ArtikoApi {
     override suspend fun listWorks(
@@ -43,6 +47,10 @@ class FakeArtikoApi(
     override suspend fun getHallOfFame(category: String, month: String): List<HallOfFameEntry> = guarded {
         hallOfFame[category].orEmpty()
     }
+
+    override suspend fun scanImage(file: MultipartBody.Part): ScanResult = guarded { requireNotNull(scanResult) }
+
+    override suspend fun createWork(parts: List<MultipartBody.Part>): Work = guarded { requireNotNull(published) }
 
     private fun <T> guarded(block: () -> T): T {
         failure?.let { throw it }

@@ -1,6 +1,10 @@
 package com.onlydevs.artiko.data
 
+import okhttp3.MultipartBody
 import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -30,4 +34,12 @@ interface ArtikoApi {
 
     @GET("api/v1/hall-of-fame/{category}/{month}")
     suspend fun getHallOfFame(@Path("category") category: String, @Path("month") month: String): List<HallOfFameEntry>
+
+    @Multipart
+    @POST("api/v1/scan/image")
+    suspend fun scanImage(@Part file: MultipartBody.Part): ScanResult
+
+    @Multipart
+    @POST("api/v1/works")
+    suspend fun createWork(@Part parts: List<MultipartBody.Part>): Work
 }

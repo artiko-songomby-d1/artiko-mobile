@@ -57,3 +57,41 @@ data class Category(val id: String, val label: String)
 
 @Serializable
 data class HallOfFameEntry(val rank: Int, val work: Work, val votes: Int)
+
+@Serializable
+enum class ScanStatus {
+    @SerialName("human_proven")
+    HumanProven,
+
+    @SerialName("artiko_work")
+    ArtikoWork,
+
+    @SerialName("known_work")
+    Known,
+
+    @SerialName("ai_made")
+    AiMade,
+
+    @SerialName("unknown")
+    Unknown,
+}
+
+@Serializable
+data class KnownWork(
+    val title: String,
+    @SerialName("artist_name") val artistName: String,
+    val date: String,
+    val museum: String,
+)
+
+@Serializable
+data class ScanSource(val label: String, val url: String)
+
+@Serializable
+data class ScanResult(
+    val status: ScanStatus,
+    val confidence: Double,
+    val work: Work? = null,
+    val known: KnownWork? = null,
+    val sources: List<ScanSource> = emptyList(),
+)
