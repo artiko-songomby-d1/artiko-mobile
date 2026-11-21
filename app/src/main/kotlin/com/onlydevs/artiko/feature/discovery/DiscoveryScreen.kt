@@ -14,7 +14,8 @@ fun DiscoveryScreen(
 ) {
     val viewModel = artikoViewModel { api -> DiscoveryViewModel(api) }
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
     LoadStateContent(state = state, onRetry = viewModel::reload) { content ->
-        DiscoveryPage(content, onOpenHallOfFame, onOpenExposition, onOpenArtView)
+        DiscoveryPage(content, query, viewModel::search, onOpenHallOfFame, onOpenExposition, onOpenArtView)
     }
 }

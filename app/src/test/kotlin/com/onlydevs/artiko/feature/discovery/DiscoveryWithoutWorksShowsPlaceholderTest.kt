@@ -10,7 +10,7 @@ class DiscoveryWithoutWorksShowsPlaceholderTest : ScreenPreviewTest() {
     fun showsAPlaceholderInsteadOfAnEmptyFeed() {
         val content = DiscoveryContent(expositions = emptyList(), works = emptyList())
         capture("discovery-empty") {
-            DiscoveryPage(content, onOpenHallOfFame = {}, onOpenExposition = {}, onOpenArtView = {})
+            DiscoveryPage(content, "", {}, onOpenHallOfFame = {}, onOpenExposition = {}, onOpenArtView = {})
         }
 
         composeRule.onNodeWithText("No art yet").assertIsDisplayed()

@@ -9,7 +9,7 @@ class DiscoveryScreenPreviewTest : ScreenPreviewTest() {
     fun capturesDiscoveryScreen() {
         val content = DiscoveryContent(MockGallery.expositions, MockGallery.works)
         capture("discovery") {
-            DiscoveryPage(content, onOpenHallOfFame = {}, onOpenExposition = {}, onOpenArtView = {})
+            DiscoveryPage(content, "", {}, onOpenHallOfFame = {}, onOpenExposition = {}, onOpenArtView = {})
         }
     }
 }
