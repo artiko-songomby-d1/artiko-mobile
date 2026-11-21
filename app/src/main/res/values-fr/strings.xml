@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_settings">Ouvrir les réglages</string>
+    <string name="camera_unavailable">La caméra ne peut pas démarrer : %1$s</string>
+</resources>
