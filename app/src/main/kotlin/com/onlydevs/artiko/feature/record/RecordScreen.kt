@@ -11,11 +11,9 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -29,7 +27,7 @@ private const val TICK_MILLIS = 1000L
 
 /** Records a video with sound; [onUpload] receives the file once the visitor chooses to publish it. */
 @Composable
-fun RecordScreen(onUpload: (String) -> Unit) {
+fun RecordScreen(onBack: () -> Unit, onUpload: (String) -> Unit) {
     val context = LocalContext.current
     val controller = rememberCameraController(CameraController.VIDEO_CAPTURE)
     var recording by remember { mutableStateOf<Recording?>(null) }
@@ -64,6 +62,7 @@ fun RecordScreen(onUpload: (String) -> Unit) {
                     }
                 }
             },
+            onBack = onBack,
             onUpload = { take?.let { onUpload(it.toUri().toString()) } },
         )
     }

@@ -24,6 +24,7 @@ import com.onlydevs.artiko.ui.ArtCard
 import com.onlydevs.artiko.ui.EmptyPlaceholder
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
+import com.onlydevs.artiko.ui.ScreenHeader
 import com.onlydevs.artiko.ui.galleryDepth
 import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
@@ -31,7 +32,7 @@ import com.onlydevs.artiko.ui.theme.ArtikoTheme
 private val RANK_SPACING = 10.dp
 
 @Composable
-fun HallOfFamePage(halls: List<CategoryHall>, onOpenArtView: (String) -> Unit) {
+fun HallOfFamePage(halls: List<CategoryHall>, onOpenArtView: (String) -> Unit, onBack: (() -> Unit)? = null) {
     val listState = rememberLazyListState()
     LazyColumn(
         state = listState,
@@ -39,7 +40,7 @@ fun HallOfFamePage(halls: List<CategoryHall>, onOpenArtView: (String) -> Unit) {
         contentPadding = PaddingValues(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
     ) {
-        item { Text("Hall of Fame", style = MaterialTheme.typography.headlineMedium) }
+        item { ScreenHeader(title = "Hall of Fame", onBack = onBack) }
         if (halls.isEmpty()) {
             item { EmptyPlaceholder("No votes yet this month") }
         }

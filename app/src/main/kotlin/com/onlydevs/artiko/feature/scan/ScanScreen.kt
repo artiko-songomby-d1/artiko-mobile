@@ -6,7 +6,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.camera.view.CameraController
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,7 +18,7 @@ import com.onlydevs.artiko.ui.camera.takePhoto
 import kotlinx.coroutines.launch
 
 @Composable
-fun ScanScreen() {
+fun ScanScreen(onBack: () -> Unit) {
     val viewModel = artikoViewModel { api -> ScanViewModel(api) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -44,6 +43,7 @@ fun ScanScreen() {
             },
             onPick = { gallery.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly)) },
             onReset = viewModel::reset,
+            onBack = onBack,
         )
     }
 }

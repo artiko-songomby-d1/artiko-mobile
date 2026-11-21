@@ -22,6 +22,7 @@ import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.GeneratedCover
 import com.onlydevs.artiko.ui.KindChip
+import com.onlydevs.artiko.ui.ScreenHeader
 import com.onlydevs.artiko.ui.camera.ViewfinderFrame
 import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
@@ -40,12 +41,13 @@ fun RecordPage(
     viewfinder: @Composable () -> Unit,
     onToggle: () -> Unit,
     onUpload: () -> Unit,
+    onBack: (() -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().statusBarsPadding().padding(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
     ) {
-        Text("Record", style = MaterialTheme.typography.headlineMedium)
+        ScreenHeader(title = "Record", onBack = onBack)
         Box(modifier = Modifier.weight(1f).fillMaxWidth().clip(MaterialTheme.shapes.medium)) {
             viewfinder()
             ViewfinderFrame()

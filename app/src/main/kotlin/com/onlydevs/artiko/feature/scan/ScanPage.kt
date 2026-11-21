@@ -14,10 +14,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +28,7 @@ import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.GeneratedCover
 import com.onlydevs.artiko.ui.LoadState
+import com.onlydevs.artiko.ui.ScreenHeader
 import com.onlydevs.artiko.ui.camera.ViewfinderFrame
 import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
@@ -45,6 +44,7 @@ fun ScanPage(
     onScan: () -> Unit,
     onPick: () -> Unit,
     onReset: () -> Unit,
+    onBack: (() -> Unit)? = null,
 ) {
     var flashing by remember { mutableStateOf(false) }
     val flash by animateFloatAsState(
@@ -57,7 +57,7 @@ fun ScanPage(
         modifier = Modifier.fillMaxSize().statusBarsPadding().padding(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
     ) {
-        Text("Scan", style = MaterialTheme.typography.headlineMedium)
+        ScreenHeader(title = "Scan", onBack = onBack)
         Box(modifier = Modifier.weight(1f).fillMaxWidth().clip(MaterialTheme.shapes.medium)) {
             viewfinder()
             ViewfinderFrame()

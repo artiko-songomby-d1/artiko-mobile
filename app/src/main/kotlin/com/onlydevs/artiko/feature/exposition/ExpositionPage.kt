@@ -1,21 +1,21 @@
 package com.onlydevs.artiko.feature.exposition
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.onlydevs.artiko.data.Exposition
 import com.onlydevs.artiko.ui.FeedList
+import com.onlydevs.artiko.ui.ScreenHeader
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 @Composable
-fun ExpositionPage(content: ExpositionContent, onOpenArtView: (String) -> Unit) {
+fun ExpositionPage(content: ExpositionContent, onOpenArtView: (String) -> Unit, onBack: (() -> Unit)? = null) {
     FeedList(
         works = content.works,
         onOpenArtView = onOpenArtView,
         emptyMessage = "No art in this exposition yet",
     ) {
-        Text(content.exposition.title, style = MaterialTheme.typography.headlineMedium)
+        ScreenHeader(title = content.exposition.title, onBack = onBack)
         Text(content.exposition.description)
     }
 }

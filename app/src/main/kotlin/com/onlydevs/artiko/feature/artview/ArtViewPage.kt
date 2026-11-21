@@ -23,11 +23,11 @@ import androidx.compose.ui.unit.dp
 import com.onlydevs.artiko.data.MediaKind
 import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.ArtImage
-import com.onlydevs.artiko.ui.ExpositionChip
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.GeneratedCover
 import com.onlydevs.artiko.ui.KindChip
+import com.onlydevs.artiko.ui.ScreenHeader
 import com.onlydevs.artiko.ui.rememberHapticClick
 import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
@@ -45,9 +45,8 @@ fun ArtViewPage(work: Work, onExit: () -> Unit, onOpenArtist: (String) -> Unit) 
             .padding(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
     ) {
-        ExpositionChip(title = "Exit", onClick = onExit)
+        ScreenHeader(title = work.title, onBack = onExit)
         ArtMedia(work, Modifier.tiltOnDrag())
-        Text(work.title, style = MaterialTheme.typography.headlineMedium)
         Text(
             text = work.artistName,
             style = ArtikoText.meta,

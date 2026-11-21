@@ -24,6 +24,7 @@ import com.onlydevs.artiko.ui.ExpositionChip
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.LoadState
+import com.onlydevs.artiko.ui.ScreenHeader
 import com.onlydevs.artiko.ui.theme.ArtikoText
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
@@ -38,6 +39,7 @@ fun UploadPage(
     onDraftChange: (WorkDraft) -> Unit,
     onPickMedia: () -> Unit,
     onPublish: () -> Unit,
+    onBack: (() -> Unit)? = null,
 ) {
     val missing = listOfNotNull(
         "a file".takeIf { mediaName == null },
@@ -53,7 +55,7 @@ fun UploadPage(
             .padding(FEED_PADDING),
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
     ) {
-        Text("Upload", style = MaterialTheme.typography.headlineMedium)
+        ScreenHeader(title = "Upload", onBack = onBack)
 
         StepTitle("01", "Input")
         ExpositionChip(title = mediaName ?: "Choose a file", onClick = onPickMedia, selected = mediaName != null)

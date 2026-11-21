@@ -34,6 +34,7 @@ private const val FAR_SCALE = 1.06f
 
 @Composable
 fun ArtikoNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+    val back: () -> Unit = { navController.popBackStack() }
     val openArtView = { workId: String -> navController.navigate(ArtViewRoute(workId)) }
     val openExposition = { expositionId: String -> navController.navigate(ExpositionRoute(expositionId)) }
 
@@ -67,39 +68,41 @@ fun ArtikoNavHost(navController: NavHostController, modifier: Modifier = Modifie
                 onRecord = { navController.navigate(RecordRoute) },
             )
         }
-        composable<ScanRoute> { ScanScreen() }
-        composable<UploadRoute> { entry -> UploadScreen(entry.toRoute<UploadRoute>().attachmentUri) }
+        composable<ScanRoute> { ScanScreen(onBack = back) }
+        composable<UploadRoute> { entry ->
+            UploadScreen(onBack = back, attachmentUri = entry.toRoute<UploadRoute>().attachmentUri)
+        }
         composable<RecordRoute> {
-            RecordScreen(onUpload = { uri -> navController.navigate(UploadRoute(uri)) })
+            RecordScreen(onBack = back, onUpload = { uri -> navController.navigate(UploadRoute(uri)) })
         }
         composable<LearnRoute> { LearnScreen() }
         composable<ProfileRoute> {
             ProfileScreen(onOpenSettings = { navController.navigate(SettingsRoute) })
         }
-        composable<HallOfFameRoute> { HallOfFameScreen(onOpenArtView = openArtView) }
+        composable<HallOfFameRoute> { HallOfFameScreen(onBack = back, onOpenArtView = openArtView) }
         composable<ExpositionRoute> { entry ->
-            ExpositionScreen(entry.toRoute<ExpositionRoute>().expositionId, openArtView)
+            ExpositionScreen(entry.toRoute<ExpositionRoute>().expositionId, back, openArtView)
         }
         composable<ArtistRoute> { entry ->
-            ArtistScreen(entry.toRoute<ArtistRoute>().artistId, openExposition, openArtView)
+            ArtistScreen(entry.toRoute<ArtistRoute>().artistId, back, openExposition, openArtView)
         }
         composable<ArtViewRoute> { entry ->
             ArtViewScreen(
                 workId = entry.toRoute<ArtViewRoute>().workId,
-                onExit = { navController.popBackStack() },
+                onExit = back,
                 onOpenArtist = { artistId -> navController.navigate(ArtistRoute(artistId)) },
             )
         }
         composable<SettingsRoute> {
             SettingsScreen(
                 onOpen = { section -> navController.navigate(SettingsSectionRoute(section)) },
-                onBack = { navController.popBackStack() },
+                onBack = back,
             )
         }
         composable<SettingsSectionRoute> { entry ->
             SettingsSectionScreen(
                 section = entry.toRoute<SettingsSectionRoute>().section,
-                onBack = { navController.popBackStack() },
+                onBack = back,
             )
         }
     }

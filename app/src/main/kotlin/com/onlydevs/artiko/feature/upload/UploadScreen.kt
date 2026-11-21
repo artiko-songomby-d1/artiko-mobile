@@ -4,11 +4,9 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,7 +19,7 @@ import kotlinx.coroutines.launch
 
 /** Publishing screen; [attachmentUri] is a file already chosen elsewhere, such as a fresh recording. */
 @Composable
-fun UploadScreen(attachmentUri: String? = null) {
+fun UploadScreen(onBack: () -> Unit, attachmentUri: String? = null) {
     val viewModel = artikoViewModel { api -> UploadViewModel(api) }
     val options by viewModel.state.collectAsStateWithLifecycle()
     val publication by viewModel.publication.collectAsStateWithLifecycle()
@@ -50,6 +48,7 @@ fun UploadScreen(attachmentUri: String? = null) {
                 expositionId = it.expositionId
             },
             onPickMedia = { picker.launch("*/*") },
+            onBack = onBack,
             onPublish = { mediaUri?.let { scope.launch { viewModel.publish(draft, context.readMedia(it.toUri())) } } },
         )
     }
