@@ -32,7 +32,9 @@ class SettingsChoicesApplyAndAccountWorksTest {
             File(Files.createTempDirectory("settings").toFile(), "settings.preferences_pb")
         },
     )
-    private val viewModel = SettingsViewModel(repository, AuthRepository(api, MemorySessionStore()))
+
+    // Built on first use: the main dispatcher rule has to be active before a ViewModel starts.
+    private val viewModel by lazy { SettingsViewModel(repository, AuthRepository(api, MemorySessionStore())) }
 
     @Test
     fun aChoiceIsSavedAndReachesTheWholeApp() = runBlocking {
