@@ -9,11 +9,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 @Composable
-fun ArtikoBottomBar(currentRoute: String?, onTabSelected: (TopLevelTab) -> Unit) {
+fun ArtikoBottomBar(selectedTab: TopLevelTab?, onTabSelected: (TopLevelTab) -> Unit) {
     NavigationBar {
         TopLevelTab.entries.forEach { tab ->
             NavigationBarItem(
-                selected = tab.route == currentRoute,
+                selected = tab == selectedTab,
                 onClick = { onTabSelected(tab) },
                 icon = { Icon(imageVector = tab.icon, contentDescription = null) },
                 label = { Text(tab.label) },
@@ -26,6 +26,6 @@ fun ArtikoBottomBar(currentRoute: String?, onTabSelected: (TopLevelTab) -> Unit)
 @Composable
 private fun ArtikoBottomBarPreview() {
     ArtikoTheme {
-        ArtikoBottomBar(currentRoute = TopLevelTab.Discovery.route, onTabSelected = {})
+        ArtikoBottomBar(selectedTab = TopLevelTab.Discovery, onTabSelected = {})
     }
 }

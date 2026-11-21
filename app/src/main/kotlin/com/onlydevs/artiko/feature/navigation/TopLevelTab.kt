@@ -7,9 +7,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 
-enum class TopLevelTab(val route: String, val label: String, val icon: ImageVector) {
-    Discovery("discovery", "Discovery", Icons.Filled.Home),
-    Create("create", "Create", Icons.Filled.Add),
-    Learn("learn", "Learn", Icons.Filled.Star),
-    Profile("profile", "Profile", Icons.Filled.Person),
+enum class TopLevelTab(val route: Any, val label: String, val icon: ImageVector) {
+    Discovery(DiscoveryRoute, "Discovery", Icons.Filled.Home),
+    Create(CreateRoute, "Create", Icons.Filled.Add),
+    Learn(LearnRoute, "Learn", Icons.Filled.Star),
+    Profile(ProfileRoute, "Profile", Icons.Filled.Person),
 }
