@@ -15,6 +15,7 @@ interface ArtikoApi {
         @Query("month") month: String? = null,
         @Query("artist_id") artistId: String? = null,
         @Query("exposition_id") expositionId: String? = null,
+        @Query("q") query: String? = null,
     ): List<Work>
 
     @GET("api/v1/works/{id}")

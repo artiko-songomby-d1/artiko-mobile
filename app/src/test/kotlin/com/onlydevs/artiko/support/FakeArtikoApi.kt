@@ -24,11 +24,13 @@ class FakeArtikoApi(
         month: String?,
         artistId: String?,
         expositionId: String?,
+        query: String?,
     ): List<Work> = guarded {
         works.filter {
             (category == null || it.category == category) &&
                 (artistId == null || it.artistId == artistId) &&
-                (expositionId == null || it.expositionId == expositionId)
+                (expositionId == null || it.expositionId == expositionId) &&
+                (query.isNullOrBlank() || it.matches(query))
         }
     }
 
@@ -57,3 +59,7 @@ class FakeArtikoApi(
         return block()
     }
 }
+
+private fun Work.matches(query: String) =
+    listOf(title, story, artistName).any { it.contains(query, ignoreCase = true) }
+
