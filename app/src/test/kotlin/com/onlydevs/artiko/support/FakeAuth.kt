@@ -68,7 +68,7 @@ class FakeAuthApi : AuthApi {
             val body = "".toResponseBody("text/plain".toMediaType())
             throw HttpException(Response.error<TokenResponse>(tokenStatus, body))
         }
-        return TokenResponse(fakeJwt(jwtExpiresAt))
+        return TokenResponse(fakeJwt(jwtExpiresAt + tokenCalls))
     }
 
     override suspend fun signOut(authorization: String): Response<Unit> {

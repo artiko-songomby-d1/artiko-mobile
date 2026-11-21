@@ -27,7 +27,7 @@ class SignInKeepsTheSessionAndTheTokenFreshTest {
 
         assertEquals(SignedInUser("Rado", "rado@example.test"), repository.user.value)
         assertEquals("session-1", store.session?.sessionToken)
-        assertEquals(fakeJwt(10_000), repository.accessToken())
+        assertEquals(fakeJwt(10_001), repository.accessToken())
     }
 
     @Test
