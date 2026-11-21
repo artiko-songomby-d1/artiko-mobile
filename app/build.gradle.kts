@@ -14,7 +14,9 @@ val releaseKeystorePath: String? = System.getenv("KEYSTORE_PATH")
 
 android {
     namespace = "com.onlydevs.artiko"
-    compileSdk = 37
+    compileSdk {
+        version = release(37) { minorApiLevel = 1 }
+    }
 
     defaultConfig {
         applicationId = "com.onlydevs.artiko"
