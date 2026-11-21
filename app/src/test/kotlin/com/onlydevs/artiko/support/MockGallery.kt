@@ -41,22 +41,33 @@ object MockGallery {
     val light = exposition("expo-light", fara, "Last Light", "Terraces at the hour before dusk.", 3)
     val expositions = listOf(threads, voices, bamboo, light)
 
-    val indigoDusk = work("w1", rado, "Indigo at Dusk", "crafts", MediaKind.Image, 38, threads, "Three baths of indigo.")
-    val annattoWeave = work("w2", rado, "Annatto Weave No. 3", "crafts", MediaKind.Image, 21, threads, "Red from seeds.")
-    val zebuGate = work("w3", rado, "Carved Zebu Gate", "sculpture", MediaKind.Model, 17, threads, "Rosewood, no nails.")
-    val hasina = work("w4", miora, "Hasina, a Speech for the Ancestors", "oral_arts", MediaKind.Audio, 58, voices, "Recorded in Ambohimanga.")
-    val harvest = work("w5", miora, "Proverbs for the Rice Harvest", "oral_arts", MediaKind.Audio, 44, voices, "Told at the first cut.")
-    val bambooBreathes = work("w6", tojo, "Bamboo Breathes", "music", MediaKind.Audio, 36, bamboo, "A valiha in the wind.")
-    val tuning = work("w7", tojo, "Tuning the Valiha", "music", MediaKind.Video, 29, bamboo, "One string at a time.")
-    val terraces = work("w8", fara, "Terraces at Noon", "painting", MediaKind.Image, 42, light, "Oil on canvas.")
-    val redEarth = work("w9", fara, "Red Earth Study", "painting", MediaKind.Image, 31, light, "Pigment from the hill.")
-    val goldenHour = work("w10", fara, "Golden Hour over Antsirabe", "painting", MediaKind.Image, 25, light, "Painted in 40 minutes.")
-    val works = listOf(terraces, hasina, indigoDusk, tuning, redEarth, zebuGate, harvest, annattoWeave, goldenHour, bambooBreathes)
+    val indigoDusk = work("w1", rado, threads, "Indigo at Dusk", "crafts", MediaKind.Image, 38)
+    val annattoWeave = work("w2", rado, threads, "Annatto Weave No. 3", "crafts", MediaKind.Image, 21)
+    val zebuGate = work("w3", rado, threads, "Carved Zebu Gate", "sculpture", MediaKind.Model, 17)
+    val hasina = work("w4", miora, voices, "Hasina, a Speech for the Ancestors", "oral_arts", MediaKind.Audio, 58)
+    val harvest = work("w5", miora, voices, "Proverbs for the Rice Harvest", "oral_arts", MediaKind.Audio, 44)
+    val bambooBreathes = work("w6", tojo, bamboo, "Bamboo Breathes", "music", MediaKind.Audio, 36)
+    val tuning = work("w7", tojo, bamboo, "Tuning the Valiha", "music", MediaKind.Video, 29)
+    val terraces = work("w8", fara, light, "Terraces at Noon", "painting", MediaKind.Image, 42)
+    val redEarth = work("w9", fara, light, "Red Earth Study", "painting", MediaKind.Image, 31)
+    val goldenHour = work("w10", fara, light, "Golden Hour over Antsirabe", "painting", MediaKind.Image, 25)
+    val works = listOf(
+        terraces,
+        hasina,
+        indigoDusk,
+        tuning,
+        redEarth,
+        zebuGate,
+        harvest,
+        annattoWeave,
+        goldenHour,
+        bambooBreathes,
+    )
 
     val hallOfFame = listOf(
-        CategoryHall(Category("painting", "Painting"), listOf(entry(1, terraces), entry(2, redEarth), entry(3, goldenHour))),
-        CategoryHall(Category("oral_arts", "Oral arts"), listOf(entry(1, hasina), entry(2, harvest))),
-        CategoryHall(Category("music", "Music"), listOf(entry(1, bambooBreathes), entry(2, tuning))),
+        CategoryHall(Category("painting", "Painting"), ranked(terraces, redEarth, goldenHour)),
+        CategoryHall(Category("oral_arts", "Oral arts"), ranked(hasina, harvest)),
+        CategoryHall(Category("music", "Music"), ranked(bambooBreathes, tuning)),
     )
 
     private fun exposition(id: String, artist: Artist, title: String, description: String, worksCount: Int) =
@@ -65,18 +76,17 @@ object MockGallery {
     private fun work(
         id: String,
         artist: Artist,
+        exposition: Exposition,
         title: String,
         category: String,
         mediaKind: MediaKind,
         votes: Int,
-        exposition: Exposition,
-        story: String,
     ) = Work(
         id = id,
         artistId = artist.id,
         artistName = artist.displayName,
         title = title,
-        story = story,
+        story = "$title, by ${artist.displayName}.",
         category = category,
         mediaUrl = "",
         mediaKind = mediaKind,
@@ -85,7 +95,9 @@ object MockGallery {
         expositionId = exposition.id,
     )
 
-    private fun entry(rank: Int, work: Work) = HallOfFameEntry(rank, work, work.votes)
+    private fun ranked(vararg podium: Work) = podium.mapIndexed { index, work ->
+        HallOfFameEntry(rank = index + 1, work = work, votes = work.votes)
+    }
 
     fun worksOf(artist: Artist) = works.filter { it.artistId == artist.id }
 
