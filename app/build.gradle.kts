@@ -14,6 +14,9 @@ val commitCount = runCatching {
 // The hosted API; pass -PapiBaseUrl=http://10.0.2.2:8000/ to reach an API running on this machine from the emulator.
 val apiBaseUrl = providers.gradleProperty("apiBaseUrl").getOrElse("https://artiko-api.onrender.com/")
 
+// Where Better Auth runs (artiko-web): the app signs in there, then exchanges the session for an API token.
+val authBaseUrl = providers.gradleProperty("authBaseUrl").getOrElse("https://artiko-web-chi.vercel.app/")
+
 val releaseKeystorePath: String? = System.getenv("KEYSTORE_PATH")
 
 android {
@@ -28,6 +31,7 @@ android {
         targetSdk = 36
         versionCode = commitCount
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+        buildConfigField("String", "AUTH_BASE_URL", "\"$authBaseUrl\"")
         versionName = providers.gradleProperty("appVersionName").getOrElse("1.0.$commitCount")
     }
 
@@ -90,11 +94,14 @@ dependencies {
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
     implementation(libs.camera.video)
+    implementation(libs.datastore.preferences)
+    implementation(libs.tink)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.okhttp.mockwebserver)
     testImplementation(libs.robolectric)
     testImplementation(libs.roborazzi)
     testImplementation(libs.roborazzi.compose)
