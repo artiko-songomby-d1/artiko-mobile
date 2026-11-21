@@ -26,6 +26,7 @@ import com.onlydevs.artiko.data.Work
 import com.onlydevs.artiko.ui.FEED_PADDING
 import com.onlydevs.artiko.ui.FEED_SPACING
 import com.onlydevs.artiko.ui.GeneratedCover
+import com.onlydevs.artiko.ui.tiltOnDrag
 import com.onlydevs.artiko.ui.theme.ArtikoTheme
 
 private val UNSUPPORTED_VIEWER_HEIGHT = 240.dp
@@ -41,7 +42,7 @@ fun ArtViewPage(work: Work, onExit: () -> Unit, onOpenArtist: (String) -> Unit) 
         verticalArrangement = Arrangement.spacedBy(FEED_SPACING),
     ) {
         TextButton(onClick = onExit) { Text("Exit") }
-        ArtMedia(work)
+        ArtMedia(work, Modifier.tiltOnDrag())
         Text(work.title, style = MaterialTheme.typography.headlineMedium)
         TextButton(onClick = { onOpenArtist(work.artistId) }) { Text(work.artistName) }
         if (work.humanProven) {
@@ -52,17 +53,17 @@ fun ArtViewPage(work: Work, onExit: () -> Unit, onOpenArtist: (String) -> Unit) 
 }
 
 @Composable
-private fun ArtMedia(work: Work) {
+private fun ArtMedia(work: Work, modifier: Modifier = Modifier) {
     if (work.mediaKind == MediaKind.Image && work.mediaUrl.isNotBlank()) {
         AsyncImage(
             model = work.mediaUrl,
             contentDescription = work.title,
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
         )
     } else {
         Box(
-            modifier = Modifier.fillMaxWidth().height(UNSUPPORTED_VIEWER_HEIGHT),
+            modifier = modifier.fillMaxWidth().height(UNSUPPORTED_VIEWER_HEIGHT),
             contentAlignment = Alignment.Center,
         ) {
             GeneratedCover(seed = work.id)
